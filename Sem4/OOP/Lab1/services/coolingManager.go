@@ -65,3 +65,10 @@ func (c *CoolingManager) monitor() error {
 func (c *CoolingManager) Stop() {
 	c.isMonitoring = false
 }
+
+func (c *CoolingManager) Start() {
+	c.isMonitoring = true
+	go func() {
+		_ = c.monitor()
+	}()
+}

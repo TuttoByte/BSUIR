@@ -14,11 +14,11 @@ type Disk struct {
 	rwSpeed     uint64
 }
 
-func NewDisk(diskType string, capacity uint64, isConnected bool) *Disk {
+func NewDisk(diskType string, capacity uint64) *Disk {
 	return &Disk{
 		diskType:    diskType,
 		capacity:    capacity,
-		isConnected: isConnected,
+		isConnected: true,
 	}
 }
 

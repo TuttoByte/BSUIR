@@ -1,6 +1,7 @@
 package cmdManager
 
 import (
+	"Lab1/services"
 	"errors"
 	"fmt"
 	"github.com/inancgumus/screen"
@@ -64,4 +65,117 @@ func (s *ScreenManager) PrintChoiceMenu() (string, error) {
 	_, _ = fmt.Scanln(&choice)
 
 	return choice, nil
+}
+
+func (s *ScreenManager) PrintHardwareMenu(dicks *[]services.Disk, rams *[]services.RAM, cpus *[]services.CPU, sm *ServerManager) {
+	screen.Clear()
+	screen.MoveTopLeft()
+	fmt.Println("Hardware controll section")
+	fmt.Println("Print 1 to control RAM")
+	fmt.Println("Print 2 to control CPU")
+	fmt.Println("Print 3 to control DISK")
+	fmt.Println("Print b to get back")
+	var choice string
+	_, _ = fmt.Scanln(&choice)
+
+	s.ShowHardwareConfMenu(choice, dicks, rams, cpus, sm)
+
+}
+
+func (s *ScreenManager) ShowHardwareConfMenu(choice string, dicks *[]services.Disk, rams *[]services.RAM, cpus *[]services.CPU, sm *ServerManager) {
+	screen.Clear()
+	screen.MoveTopLeft()
+
+	switch choice {
+	case "1":
+		s.ramHardwareMenu(rams, "RAM", sm)
+	case "2":
+		s.cpuHardwareMenu(cpus, "CPU", sm)
+	case "3":
+		s.diskHardwareMenu(dicks, "DISKS", sm)
+
+	}
+}
+func (s *ScreenManager) ramHardwareMenu(storage *[]services.RAM, htype string, sm *ServerManager) string {
+	choice := printIn(htype)
+
+	switch choice {
+
+	case "1":
+		sm.AddTask(func() {
+			ram := services.NewRAM(64, 5200)
+			*storage = append(*storage, *ram)
+		})
+	case "2":
+
+	case "3":
+		showList[services.RAM](*storage)
+		_, _ = fmt.Scanln()
+
+	}
+
+	return choice
+}
+
+func (s *ScreenManager) cpuHardwareMenu(storage *[]services.CPU, htype string, sm *ServerManager) string {
+	choice := printIn(htype)
+
+	switch choice {
+
+	case "1":
+		sm.AddTask(func() {
+			ram := services.NewCPU(48, 96, 4, "INTEL")
+			*storage = append(*storage, *ram)
+		})
+	case "2":
+
+	case "3":
+		showList[services.CPU](*storage)
+		_, _ = fmt.Scanln()
+
+	}
+
+	return choice
+}
+
+func (s *ScreenManager) diskHardwareMenu(storage *[]services.Disk, htype string, sm *ServerManager) string {
+	choice := printIn(htype)
+	fmt.Println(storage)
+
+	switch choice {
+
+	case "1":
+		sm.AddTask(func() {
+			ram := services.NewDisk("HDD", 4096)
+			*storage = append(*storage, *ram)
+		})
+
+	case "2":
+
+	case "3":
+		showList[services.Disk](*storage)
+		_, _ = fmt.Scanln()
+
+	}
+
+	return choice
+}
+
+func printIn(htype string) string {
+	screen.Clear()
+	screen.MoveTopLeft()
+	fmt.Println("Hello, this is ", htype, "controll")
+	fmt.Println("Print 1 to add", htype)
+	fmt.Println("Print 2 to delete", htype)
+	fmt.Println("Print 3 to list all", htype)
+	fmt.Println("Print b to get back")
+	var choice string
+	_, _ = fmt.Scanln(&choice)
+	return choice
+}
+
+func showList[T any](list []T) {
+	for _, item := range list {
+		fmt.Println(item)
+	}
 }

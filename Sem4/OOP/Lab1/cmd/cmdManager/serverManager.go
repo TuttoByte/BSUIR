@@ -1,6 +1,9 @@
 package cmdManager
 
+import "sync"
+
 type ServerManager struct {
+	wg      sync.WaitGroup
 	configs map[string]string
 }
 
@@ -18,5 +21,13 @@ func (sm *ServerManager) SetConfig(key string, value string) {
 }
 
 func (sm *ServerManager) AddTask(task func()) {
-	go task()
+	sm.wg.Add(1)
+	go func() {
+		defer sm.wg.Done()
+		task()
+	}()
+}
+
+func (sm *ServerManager) Wait() {
+	sm.wg.Wait()
 }
