@@ -1,0 +1,5 @@
+/home/udainoko/Documents/BSUIR/Sem4/С#/Lab2/Lab2/obj/Debug/net9.0/Lab2.GeneratedMSBuildEditorConfig.editorconfig
+/home/udainoko/Documents/BSUIR/Sem4/С#/Lab2/Lab2/obj/Debug/net9.0/Lab2.AssemblyInfoInputs.cache
+/home/udainoko/Documents/BSUIR/Sem4/С#/Lab2/Lab2/obj/Debug/net9.0/Lab2.AssemblyInfo.cs
+/home/udainoko/Documents/BSUIR/Sem4/С#/Lab2/Lab2/obj/Debug/net9.0/Lab2.csproj.CoreCompileInputs.cache
+/home/udainoko/Documents/BSUIR/Sem4/С#/Lab2/Lab2/obj/Debug/net9.0/Lab2.sourcelink.json
