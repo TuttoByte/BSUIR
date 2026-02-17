@@ -1,5 +1,4 @@
 @startuml
-
 skinparam linetype ortho
 !define RECTANGLE class
 skinparam ranksep 60
@@ -253,7 +252,4 @@ left to right direction
 
 "SMBConnetcion" <|-- "Connection"
 "FTPConnetcion" <|-- "Connection"
-
-
-
 @enduml
