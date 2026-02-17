@@ -1,0 +1,31 @@
+@startuml
+namespace Lab1 {
+}
+namespace cmd {
+    namespace cmdManager {
+    class "ScreenManager" << (S,Aquamarine) >> {
+        - screen bool
+
+        - ramHardwareMenu(storage *[]services.RAM, htype string, sm *ServerManager) string
+        - cpuHardwareMenu(storage *[]services.CPU, htype string, sm *ServerManager) string
+        - diskHardwareMenu(storage *[]services.Disk, htype string, sm *ServerManager) string
+
+        + Start()
+        + Stop()
+        + IsScreen() bool
+        + Output(text string)
+        + PrintChoiceMenu() (string, error)
+        + PrintHardwareMenu(dicks *[]services.Disk, rams *[]services.RAM, cpus *[]services.CPU, sm *ServerManager)
+        + ShowHardwareConfMenu(choice string, dicks *[]services.Disk, rams *[]services.RAM, cpus *[]services.CPU, sm *ServerManager)
+
+    }
+    class "ServerManager" << (S,Aquamarine) >> {
+        - wg sync.WaitGroup
+        - configs <font color=blue>map</font>[string]string
+
+        + GetConfig(key string) string
+        + SetConfig(key string, value string)
+        + AddTask(task <font color=blue>func</font>() )
+        + Wait()
+
+    }

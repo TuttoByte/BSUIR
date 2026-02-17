@@ -1,0 +1,158 @@
+@startuml
+namespace Lab1 {
+}
+namespace cmd {
+    namespace cmdManager {
+    class "ScreenManager" << (S,Aquamarine) >> {
+        - screen bool
+
+        - ramHardwareMenu(storage *[]services.RAM, htype string, sm *ServerManager) string
+        - cpuHardwareMenu(storage *[]services.CPU, htype string, sm *ServerManager) string
+        - diskHardwareMenu(storage *[]services.Disk, htype string, sm *ServerManager) string
+
+        + Start() 
+        + Stop() 
+        + IsScreen() bool
+        + Output(text string) 
+        + PrintChoiceMenu() (string, error)
+        + PrintHardwareMenu(dicks *[]services.Disk, rams *[]services.RAM, cpus *[]services.CPU, sm *ServerManager) 
+        + ShowHardwareConfMenu(choice string, dicks *[]services.Disk, rams *[]services.RAM, cpus *[]services.CPU, sm *ServerManager) 
+
+    }
+    class "ServerManager" << (S,Aquamarine) >> {
+        - wg sync.WaitGroup
+        - configs <font color=blue>map</font>[string]string
+
+        + GetConfig(key string) string
+        + SetConfig(key string, value string) 
+        + AddTask(task <font color=blue>func</font>() ) 
+        + Wait() 
+
+    }
+    }
+}
+namespace services {
+    class "AccessControl" << (S,Aquamarine) >> {
+        - users <font color=blue>map</font>[uint64]bool
+
+        + AddUser(user uint64, permission bool) error
+        + RemoveUser(user uint64) error
+        + SetUserPermission(user uint64, permission bool) error
+
+    }
+    class "AlertManager" << (S,Aquamarine) >> {
+        - alerts []error
+
+        + GetAlerts() 
+        + AddAlert(err error) 
+
+    }
+    class "BackupManager" << (S,Aquamarine) >> {
+        - storageData *bytes.Buffer
+        - period uint64
+        - isPeriodic bool
+
+        - proceesPeriod(disks []Disk) error
+
+        + Save(disks []Disk) error
+        + StartPeriod(disk []Disk) error
+        + StopPeriod() error
+
+    }
+    class "CPU" << (S,Aquamarine) >> {
+        - cores uint64
+        - threads uint64
+        - nm uint64
+        - isStarted bool
+        - temperature float32
+        - boost bool
+
+        + Model string
+
+        - getCPUSystemTemp() float64
+
+        + Start() error
+        + Stop() error
+
+    }
+    class "CoolingManager" << (S,Aquamarine) >> {
+        - devices <font color=blue>map</font>[uint64]float32
+        - isMonitoring bool
+
+        + MaxTemp float32
+
+        - monitor() error
+
+        + AddDevice(id uint64, temp float32) error
+        + Stop() 
+        + Start() 
+
+    }
+    class "Device" << (S,Aquamarine) >> {
+        + Name string
+        + MaxTemp float32
+
+    }
+    class "Disk" << (S,Aquamarine) >> {
+        - diskType string
+        - capacity uint64
+        - isConnected bool
+        - rwSpeed uint64
+
+        + DiskType() string
+        + Connect() error
+        + Disconnect() error
+
+    }
+    class "Firewall" << (S,Aquamarine) >> {
+        - rules <font color=blue>map</font>[string]bool
+        - defaultPolicy string
+        - interfaces <font color=blue>map</font>[string]string
+        - blockedIps []net.IP
+        - activeSession []net.Conn
+        - natRules []string
+
+    }
+    class "MaxCoolingTemp" << (S,Aquamarine) >> {
+        + Devices []Device
+
+    }
+    class "NetworkManager" << (S,Aquamarine) >> {
+        - devices []string
+        - topology string
+        - errorCoounter uint64
+        - latencyHash hash.Hash
+        - activeTunnels []string
+        - requests <font color=blue>map</font>[string]hash.Hash
+
+        - proceedRequest(request Requesrt) 
+
+        + AddDevice(device string) 
+        + GetAllDevices() []string
+        + GetTopology() string
+        + SendRequest(r Requesrt) error
+
+    }
+    class "RAM" << (S,Aquamarine) >> {
+        - capacity uint64
+        - frequency uint64
+        - isStarted bool
+
+        + Capacity() uint64
+        + Frequency() uint64
+        + IsStarted() bool
+        + Start() 
+
+    }
+    class "Requesrt" << (S,Aquamarine) >> {
+        + Sender string
+        + Command string
+
+    }
+}
+
+
+"services.MaxCoolingTemp""uses" o-- "services.Device"
+
+
+@enduml

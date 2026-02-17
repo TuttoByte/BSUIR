@@ -3,8 +3,12 @@ package managres
 import (
 	"Lab1/interfaces"
 	"bytes"
+	"crypto/sha1"
+	"encoding/base64"
 	"encoding/binary"
 	"errors"
+	"fmt"
+	"log"
 	"time"
 )
 
@@ -12,6 +16,40 @@ type BackupManager struct {
 	storageData *bytes.Buffer
 	period      uint64
 	isPeriodic  bool
+}
+
+type BackupColection[T any] struct {
+	data       []T
+	presethash []string
+	log.Logger
+}
+
+func (b *BackupColection[T]) CheckHash() error {
+	var err error
+	go func() {
+		for {
+			var i int
+			time.Sleep(time.Duration(5) * time.Second)
+			buffer := bytes.NewBuffer(nil)
+			err := binary.Write(buffer, binary.LittleEndian, b.data)
+			if err != nil {
+				err = errors.New(fmt.Sprint("binary write error: ", err))
+				return
+			}
+			hasher := sha1.New()
+			hasher.Write(buffer.Bytes())
+			sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+			if sha == b.presethash[i] {
+				return
+			}
+
+			if i == len(b.data) {
+				i = 0
+			}
+
+		}
+	}()
+	return err
 }
 
 func NewBackupManager(period uint64, isPeriod bool) *BackupManager {
