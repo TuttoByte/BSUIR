@@ -1,6 +1,7 @@
 package network
 
 import (
+	"Lab1/interfaces"
 	"fmt"
 	"hash"
 )
@@ -11,7 +12,8 @@ type NetworkManager struct {
 	errorCoounter uint64
 	latencyHash   hash.Hash
 	activeTunnels []string
-	requests      map[string]hash.Hash
+	Requests      map[Requesrt]hash.Hash
+	sessions      interfaces.Connection
 }
 
 type Requesrt struct {

@@ -1,18 +1,21 @@
 package services
 
-import "errors"
+import (
+	"Lab1/services/network/control"
+	"errors"
+)
 
 type AccessControl struct {
-	users map[uint64]bool
+	usersPermisions map[uint64]control.Client
 }
 
 func NewAccessControl() *AccessControl {
 	return &AccessControl{
-		users: make(map[uint64]bool),
+		usersPermisions: make(map[uint64]control.Client),
 	}
 }
 
-func (ac *AccessControl) AddUser(user uint64, permission bool) error {
+func (ac *AccessControl) AddUser(client control.Client) error {
 
 	_, ok := ac.users[user]
 	if !ok {

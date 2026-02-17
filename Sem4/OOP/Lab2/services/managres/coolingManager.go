@@ -9,8 +9,8 @@ import (
 )
 
 type CoolingDevice struct {
-	uapi    net.Listener
-	MaxTemp float32
+	UAPI        net.Listener
+	CurrentTemp float32
 }
 
 type CoolingManager struct {

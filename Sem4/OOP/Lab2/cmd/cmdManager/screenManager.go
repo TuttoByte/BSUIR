@@ -10,6 +10,7 @@ import (
 
 type ScreenManager struct {
 	screen bool
+	sm     *ServerManager
 }
 
 func NewScreenManager() *ScreenManager {

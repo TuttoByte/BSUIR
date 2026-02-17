@@ -2,13 +2,20 @@ package cmdManager
 
 import (
 	"Lab1/interfaces"
+	"Lab1/services"
+	"Lab1/services/managres"
+	"Lab1/services/network"
 	"sync"
 )
 
 type ServerManager struct {
-	wg      sync.WaitGroup
-	configs map[string]string
-	devices []interfaces.Device
+	wg             sync.WaitGroup
+	configs        map[string]string
+	devices        []interfaces.Device
+	netManager     *network.NetworkManager
+	acessControl   *services.AccessControl
+	collingManafer *managres.CoolingManager
+	backupManager  *managres.BackupManager
 }
 
 func NewServerManager() *ServerManager {
