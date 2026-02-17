@@ -14,6 +14,7 @@ type NetworkManager struct {
 	activeTunnels []string
 	Requests      map[Requesrt]hash.Hash
 	sessions      interfaces.Connection
+	fw            Firewall
 }
 
 type Requesrt struct {

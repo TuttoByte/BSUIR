@@ -67,3 +67,7 @@ func (b *BackupManager) StopPeriod() error {
 	b.isPeriodic = false
 	return nil
 }
+
+func (b *BackupManager) GetStatus() bool {
+	return b.isPeriodic
+}

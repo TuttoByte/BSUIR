@@ -6,40 +6,40 @@ import (
 )
 
 type AccessControl struct {
-	usersPermisions map[uint64]control.Client
+	usersPermisions map[uint64]*control.Client
 }
 
 func NewAccessControl() *AccessControl {
 	return &AccessControl{
-		usersPermisions: make(map[uint64]control.Client),
+		usersPermisions: make(map[uint64]*control.Client),
 	}
 }
 
 func (ac *AccessControl) AddUser(client control.Client) error {
 
-	_, ok := ac.users[user]
+	_, ok := ac.usersPermisions[client.GetID()]
 	if !ok {
-		ac.users[user] = permission
+		ac.usersPermisions[client.GetID()] = &client
 	} else {
 		return errors.New("User already exists")
 	}
 	return nil
 }
 
-func (ac *AccessControl) RemoveUser(user uint64) error {
-	_, ok := ac.users[user]
+func (ac *AccessControl) RemoveUser(client control.Client) error {
+	_, ok := ac.usersPermisions[client.GetID()]
 	if !ok {
 		return errors.New("User does not exist")
 	}
-	delete(ac.users, user)
+	delete(ac.usersPermisions, client.GetID())
 	return nil
 }
 
-func (ac *AccessControl) SetUserPermission(user uint64, permission bool) error {
-	_, ok := ac.users[user]
+func (ac *AccessControl) SetUserPermission(id uint64, permission bool) error {
+	_, ok := ac.usersPermisions[id]
 	if !ok {
 		return errors.New("User does not exist")
 	}
-	ac.users[user] = permission
+	ac.usersPermisions[id].SetControlStatus(permission)
 	return nil
 }

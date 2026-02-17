@@ -1,0 +1,259 @@
+@startuml
+
+skinparam linetype ortho
+!define RECTANGLE class
+skinparam ranksep 60
+left to right direction
+
+    class "DeviceInfo" << (S,Aquamarine) >> {
+        - uapi net.Listener
+
+        + MaxTemp float32
+
+        + GetMaxTemp() float32
+        + GetUAPI() net.Listener
+
+    }
+
+
+    class "FTPConnetcion" << (S,Aquamarine) >> {
+        + EstablishConnection() error
+        + CloseConnection() error
+        + ShowRemoteFiles() error
+        + DownRemoteloadFile() error
+        + ListRemoteFiles() error
+
+    }
+    class "SMBConnetcion" << (S,Aquamarine) >> {
+        + EstablishConnection() error
+        + CloseConnection() error
+        + ShowRemoteFiles() error
+        + DownRemoteloadFile() error
+        + ListRemoteFiles() error
+
+    }
+
+
+    class "CPU" << (S,Aquamarine) >> {
+        - cores uint64
+        - threads uint64
+        - nm uint64
+        - isStarted bool
+        - temperature float32
+        - boost bool
+        - info additioal.DeviceInfo
+
+        + Model string
+
+        - getCPUSystemTemp() float64
+
+        + Connect() error
+        + Disconnect() error
+        + GetUAPI() net.Listener
+        + GetMaxTemp() float32
+        + GetType() string
+
+    }
+    class "Disk" << (S,Aquamarine) >> {
+        - diskType string
+        - capacity uint64
+        - isConnected bool
+        - rwSpeed uint64
+        - info additioal.DeviceInfo
+
+        + DiskType() string
+        + Connect() error
+        + Disconnect() error
+        + GetUAPI() net.Listener
+        + GetMaxTemp() float32
+        + GetType() string
+
+        "]]Disk""uses" o-- "additioal.DeviceInfo"
+
+    }
+    class "RAM" << (S,Aquamarine) >> {
+        - capacity uint64
+        - frequency uint64
+        - isStarted bool
+        - info additioal.DeviceInfo
+
+        + Capacity() uint64
+        + Frequency() uint64
+        + IsStarted() bool
+        + Connect() error
+        + Disconnect() error
+        + GetType() string
+        + GetUAPI() net.Listener
+        + GetMaxTemp() float32
+
+    }
+
+
+    class "BackupManager" << (S,Aquamarine) >> {
+        - storageData *bytes.Buffer
+        - period uint64
+        - isPeriodic bool
+
+        - proceesPeriod(disks []interfaces.Device) error
+
+        + Save(disks []interfaces.Device) error
+        + StartPeriod(disk []interfaces.Device) error
+        + StopPeriod() error
+
+    }
+    class "CoolingDevice" << (S,Aquamarine) >> {
+        - uapi net.Listener
+
+        + MaxTemp float32
+
+    }
+    class "CoolingManager" << (S,Aquamarine) >> {
+        - devices <font color=blue>map</font>[string]net.Listener
+        - mSpace *[]interfaces.Device
+        - isMonitoring bool
+
+        + MaxTempList <font color=blue>map</font>[string]float32
+
+        - monitor() error
+        - getTemperature(uapi net.Listener) float32
+
+        + AddDevice(dev interfaces.Device) error
+        + Stop()
+        + Start()
+        + AddMonitorSpace(devices []interfaces.Device) error
+        + DeviceKill(dev interfaces.Device) error
+
+    }
+
+
+    class "Firewall" << (S,Aquamarine) >> {
+        - rules <font color=blue>map</font>[string]bool
+        - defaultPolicy string
+        - interfaces <font color=blue>map</font>[string]string
+        - blockedIps []net.IP
+        - activeSession []net.Conn
+        - natRules []string
+
+    }
+    class "NetworkManager" << (S,Aquamarine) >> {
+        - devices []string
+        - topology string
+        - errorCoounter uint64
+        - latencyHash hash.Hash
+        - activeTunnels []string
+        - sessions interfaces.Connection
+
+        + Requests <font color=blue>map</font>[Requesrt]hash.Hash
+
+        - proceedRequest(request Requesrt)
+
+        + AddDevice(device string)
+        + GetAllDevices() []string
+        + GetTopology() string
+        + SendRequest(r Requesrt) error
+
+    }
+    class "Requesrt" << (S,Aquamarine) >> {
+        + Sender string
+        + Command string
+
+    }
+
+
+
+    class "ScreenManager" << (S,Aquamarine) >> {
+        - screen bool
+
+        - ramHardwareMenu(storage *[]devices.RAM, htype string, sm *ServerManager) string
+        - cpuHardwareMenu(storage *[]devices.CPU, htype string, sm *ServerManager) string
+        - diskHardwareMenu(storage *[]devices.Disk, htype string, sm *ServerManager) string
+
+        + Start()
+        + Stop()
+        + IsScreen() bool
+        + Output(text string)
+        + PrintChoiceMenu() (string, error)
+        + PrintHardwareMenu(dicks *[]devices.Disk, rams *[]devices.RAM, cpus *[]devices.CPU, sm *ServerManager)
+        + ShowHardwareConfMenu(choice string, sm *ServerManager)
+}
+
+    class "ServerManager" << (S,Aquamarine) >> {
+        - wg sync.WaitGroup
+        - configs <font color=blue>map</font>[string]string
+        - devices []interfaces.Device
+
+        + GetConfig(key string) string
+        + SetConfig(key string, value string)
+        + AddTask(task <font color=blue>func</font>() )
+        + Wait()
+
+    }
+
+
+    interface "Connection"  {
+        + EstablishConnection() error
+        + CloseConnection() error
+        + ShowRemoteFiles() error
+        + ListRemoteFiles() error
+        + DownRemoteloadFile() error
+
+    }
+    interface "Device"  {
+        + GetType() string
+        + GetUAPI() net.Listener
+        + GetMaxTemp() float32
+        + Connect() error
+        + Disconnect() error
+
+    }
+
+
+    class "AccessControl" << (S,Aquamarine) >> {
+        - users <font color=blue>map</font>[uint64]bool
+
+        + AddUser(user uint64, permission bool) error
+        + RemoveUser(user uint64) error
+        + SetUserPermission(user uint64, permission bool) error
+
+    }
+    class "AlertManager" << (S,Aquamarine) >> {
+        - alerts []error
+
+        + GetAlerts()
+        + AddAlert(err error)
+
+    }
+
+
+
+"CPU""uses" o-- "DeviceInfo"
+"Disk""uses" o-- "DeviceInfo"
+"RAM""uses" o-- "DeviceInfo"
+
+"RAM" <|-- "Device"
+"Disk" <|-- "Device"
+"CPU" <|-- "Device"
+
+"CoolingManager""uses" o-- "Device"
+
+"NetworkManager""uses" o-- "Requesrt"
+"NetworkManager""uses" o-- "Connection"
+"NetworkManager""uses" o-- "Firewall"
+"ServerManager""uses" o-- "Device"
+
+"ScreenManager""uses" o-- "ServerManager"
+"ServerManager""uses" o-- "Client"
+"ServerManager""uses" o-- "Device"
+"ServerManager""uses" o-- "BackupManager"
+"ServerManager""uses" o-- "CoolingManager"
+"CoolingManager""uses" o-- "CoolingDevice"
+"ServerManager""uses" o-- "NetworkManager"
+"ServerManager""uses" o-- "AccessControl"
+"ServerManager""uses" o-- "AlertManager"
+
+"SMBConnetcion" <|-- "Connection"
+"FTPConnetcion" <|-- "Connection"
+
+
+
+@enduml

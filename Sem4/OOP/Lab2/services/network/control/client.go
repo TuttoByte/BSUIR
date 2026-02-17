@@ -33,3 +33,7 @@ func (c *Client) GetConn() interfaces.Connection {
 func (c *Client) GetStatus() bool {
 	return c.controlStatus
 }
+
+func (c *Client) SetControlStatus(status bool) {
+	c.controlStatus = status
+}

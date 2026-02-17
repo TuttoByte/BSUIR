@@ -1,16 +1,18 @@
 package cmdManager
 
 import (
+	"Lab1/interfaces"
 	"Lab1/services/devices"
 	"errors"
 	"fmt"
 	"github.com/inancgumus/screen"
 	"os"
+	"reflect"
 )
 
 type ScreenManager struct {
 	screen bool
-	sm     *ServerManager
+	SM     *ServerManager
 }
 
 func NewScreenManager() *ScreenManager {
@@ -22,6 +24,7 @@ func NewScreenManager() *ScreenManager {
 	}
 	return &ScreenManager{
 		screen: true,
+		SM:     NewServerManager(),
 	}
 }
 
@@ -59,8 +62,12 @@ func (s *ScreenManager) PrintChoiceMenu() (string, error) {
 	screen.Clear()
 	screen.MoveTopLeft()
 	fmt.Println("To configurate hardware press 1")
-	fmt.Println("To configurate software press 2")
-	fmt.Println("To exit pree q")
+	if !s.SM.BackupManager.GetStatus() {
+		fmt.Println("To Start monitoring system press 2")
+	} else {
+		fmt.Println("To Stop monitoring system press 2")
+	}
+	fmt.Println("To exit preess q")
 
 	var choice string
 	_, _ = fmt.Scanln(&choice)
@@ -68,7 +75,7 @@ func (s *ScreenManager) PrintChoiceMenu() (string, error) {
 	return choice, nil
 }
 
-func (s *ScreenManager) PrintHardwareMenu(dicks *[]devices.Disk, rams *[]devices.RAM, cpus *[]devices.CPU, sm *ServerManager) {
+func (s *ScreenManager) PrintHardwareMenu() {
 	screen.Clear()
 	screen.MoveTopLeft()
 	fmt.Println("Hardware controll section")
@@ -79,104 +86,97 @@ func (s *ScreenManager) PrintHardwareMenu(dicks *[]devices.Disk, rams *[]devices
 	var choice string
 	_, _ = fmt.Scanln(&choice)
 
-	s.ShowHardwareConfMenu(choice, sm)
+	s.ShowHardwareConfMenu(choice)
 
 }
 
-func (s *ScreenManager) ShowHardwareConfMenu(choice string, sm *ServerManager) {
+func (s *ScreenManager) ShowHardwareConfMenu(choice string) {
 	screen.Clear()
 	screen.MoveTopLeft()
 
+	var device interfaces.Device
+
 	switch choice {
 	case "1":
-		s.ramHardwareMenu(rams, "RAM", sm)
+		device = &devices.RAM{}
 	case "2":
-		s.cpuHardwareMenu(cpus, "CPU", sm)
+		device = &devices.CPU{}
 	case "3":
-		s.diskHardwareMenu(dicks, "DISKS", sm)
-
+		device = &devices.Disk{}
+	case "b":
+		return
 	}
+	s.createHardwareMenu(device)
+
 }
-func (s *ScreenManager) ramHardwareMenu(storage *[]devices.RAM, htype string, sm *ServerManager) string {
-	choice := printIn(htype)
+func (s *ScreenManager) createHardwareMenu(d interfaces.Device) {
+	choice := printIn(d)
 
 	switch choice {
 
 	case "1":
-		sm.AddTask(func() {
-			ram := devices.NewRAM(64, 5200)
-			*storage = append(*storage, *ram)
+		s.SM.AddTask(func() {
+			newDevice(s.SM, d)
 		})
 	case "2":
 
 	case "3":
-		showList[devices.RAM](*storage)
+		showList(s.SM.devices, d)
 		_, _ = fmt.Scanln()
-
+	case "b":
+		return
 	}
 
-	return choice
 }
 
-func (s *ScreenManager) cpuHardwareMenu(storage *[]devices.CPU, htype string, sm *ServerManager) string {
-	choice := printIn(htype)
-
-	switch choice {
-
-	case "1":
-		sm.AddTask(func() {
-			ram := devices.NewCPU(48, 96, 4, "INTEL")
-			*storage = append(*storage, *ram)
-		})
-	case "2":
-
-	case "3":
-		showList[devices.CPU](*storage)
-		_, _ = fmt.Scanln()
-
-	}
-
-	return choice
-}
-
-func (s *ScreenManager) diskHardwareMenu(storage *[]devices.Disk, htype string, sm *ServerManager) string {
-	choice := printIn(htype)
-	fmt.Println(storage)
-
-	switch choice {
-
-	case "1":
-		sm.AddTask(func() {
-			ram := devices.NewDisk("HDD", 4096)
-			*storage = append(*storage, *ram)
-		})
-
-	case "2":
-
-	case "3":
-		showList[devices.Disk](*storage)
-		_, _ = fmt.Scanln()
-
-	}
-
-	return choice
-}
-
-func printIn(htype string) string {
+func printIn(d interfaces.Device) string {
 	screen.Clear()
 	screen.MoveTopLeft()
-	fmt.Println("Hello, this is ", htype, "controll")
-	fmt.Println("Print 1 to add", htype)
-	fmt.Println("Print 2 to delete", htype)
-	fmt.Println("Print 3 to list all", htype)
+	fmt.Println("Hello, this is ", d.GetType(), "controll")
+	fmt.Println("Print 1 to add", d.GetType())
+	fmt.Println("Print 2 to delete", d.GetType())
+	fmt.Println("Print 3 to list all", d.GetType())
 	fmt.Println("Print b to get back")
 	var choice string
 	_, _ = fmt.Scanln(&choice)
 	return choice
 }
 
-func showList[T any](list []T) {
+func showList(list []interfaces.Device, t interfaces.Device) {
+	mainType := reflect.TypeOf(t)
 	for _, item := range list {
-		fmt.Println(item)
+		if reflect.TypeOf(item) == mainType {
+			fmt.Println(item)
+		}
 	}
+}
+
+func newDevice(sm *ServerManager, dev interface{}) {
+
+	screen.Clear()
+	screen.MoveTopLeft()
+	var d interfaces.Device
+
+	switch v := (dev).(type) {
+
+	case *devices.RAM:
+		d = devices.NewRAM(64, 5200)
+		fmt.Println("Device", v.GetType(), "successfully created")
+
+	case *devices.CPU:
+		d = devices.NewCPU(12, 16, 4, "Intel")
+		fmt.Println("Device", v.GetType(), "successfully created")
+
+	case *devices.Disk:
+		d = devices.NewDisk("SSD", 1024)
+
+		fmt.Println("Device", v.GetType(), "successfully created")
+
+	default:
+		fmt.Println("Device", v, "not recognized")
+
+	}
+
+	sm.devices = append(sm.devices, d)
+
 }

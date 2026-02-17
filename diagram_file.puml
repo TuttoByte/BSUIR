@@ -1,0 +1,291 @@
+@startuml
+namespace Lab2 {
+}
+namespace additioal {
+    class "DeviceInfo" << (S,Aquamarine) >> {
+        - uapi net.Listener
+
+        + MaxTemp float32
+
+        + GetMaxTemp() float32
+        + GetUAPI() net.Listener
+
+    }
+}
+namespace connect {
+    class "FTPConnetcion" << (S,Aquamarine) >> {
+        - session net.Conn
+
+        + EstablishConnection() error
+        + CloseConnection() error
+        + ShowRemoteFiles() error
+        + DownRemoteloadFile() error
+        + ListRemoteFiles() error
+
+    }
+    class "SMBConnetcion" << (S,Aquamarine) >> {
+        - session net.Conn
+
+        + EstablishConnection() error
+        + CloseConnection() error
+        + ShowRemoteFiles() error
+        + DownRemoteloadFile() error
+        + ListRemoteFiles() error
+
+    }
+}
+namespace devices {
+    class "CPU" << (S,Aquamarine) >> {
+        - cores uint64
+        - threads uint64
+        - nm uint64
+        - isStarted bool
+        - temperature float32
+        - boost bool
+        - info additioal.DeviceInfo
+
+        + Model string
+
+        - getCPUSystemTemp() float64
+
+        + Connect() error
+        + Disconnect() error
+        + GetUAPI() net.Listener
+        + GetMaxTemp() float32
+        + GetType() string
+
+    }
+    class "Disk" << (S,Aquamarine) >> {
+        - diskType string
+        - capacity uint64
+        - isConnected bool
+        - rwSpeed uint64
+        - info additioal.DeviceInfo
+
+        + DiskType() string
+        + Connect() error
+        + Disconnect() error
+        + GetUAPI() net.Listener
+        + GetMaxTemp() float32
+        + GetType() string
+
+    }
+    class "RAM" << (S,Aquamarine) >> {
+        - capacity uint64
+        - frequency uint64
+        - isStarted bool
+        - info additioal.DeviceInfo
+
+        + Capacity() uint64
+        + Frequency() uint64
+        + IsStarted() bool
+        + Connect() error
+        + Disconnect() error
+        + GetType() string
+        + GetUAPI() net.Listener
+        + GetMaxTemp() float32
+
+    }
+}
+namespace managres {
+    class "BackupManager" << (S,Aquamarine) >> {
+        - storageData *bytes.Buffer
+        - period uint64
+        - isPeriodic bool
+
+        - proceesPeriod(disks []interfaces.Device) error
+
+        + Save(disks []interfaces.Device) error
+        + StartPeriod(disk []interfaces.Device) error
+        + StopPeriod() error
+        + GetStatus() bool
+
+    }
+    class "CoolingDevice" << (S,Aquamarine) >> {
+        + UAPI net.Listener
+        + CurrentTemp float32
+
+    }
+    class "CoolingManager" << (S,Aquamarine) >> {
+        - devices <font color=blue>map</font>[string]net.Listener
+        - mSpace *[]interfaces.Device
+        - isMonitoring bool
+
+        + MaxTempList <font color=blue>map</font>[string]float32
+
+        - monitor() error
+        - getTemperature(uapi net.Listener) float32
+
+        + AddDevice(dev interfaces.Device) error
+        + Stop() 
+        + Start() 
+        + AddMonitorSpace(devices []interfaces.Device) error
+        + DeviceKill(dev interfaces.Device) error
+
+    }
+}
+namespace network {
+    class "Firewall" << (S,Aquamarine) >> {
+        - rules <font color=blue>map</font>[string]bool
+        - defaultPolicy string
+        - interfaces <font color=blue>map</font>[string]string
+        - blockedIps []net.IP
+        - activeSession []net.Conn
+        - natRules []string
+
+    }
+    class "NetworkManager" << (S,Aquamarine) >> {
+        - devices []string
+        - topology string
+        - errorCoounter uint64
+        - latencyHash hash.Hash
+        - activeTunnels []string
+        - sessions interfaces.Connection
+        - fw Firewall
+
+        + Requests <font color=blue>map</font>[Requesrt]hash.Hash
+
+        - proceedRequest(request Requesrt) 
+
+        + AddDevice(device string) 
+        + GetAllDevices() []string
+        + GetTopology() string
+        + SendRequest(r Requesrt) error
+
+    }
+    class "Requesrt" << (S,Aquamarine) >> {
+        + Sender string
+        + Command string
+
+    }
+    namespace control {
+    class "Client" << (S,Aquamarine) >> {
+        - id uint64
+        - ip net.IP
+        - conn interfaces.Connection
+        - controlStatus bool
+
+        + GetID() uint64
+        + GetIP() net.IP
+        + GetConn() interfaces.Connection
+        + GetStatus() bool
+        + SetControlStatus(status bool) 
+
+    }
+    }
+}
+namespace cmd {
+    namespace cmdManager {
+    class "ScreenManager" << (S,Aquamarine) >> {
+        - screen bool
+
+        + SM *ServerManager
+
+        - createHardwareMenu(d interfaces.Device) 
+
+        + Start() 
+        + Stop() 
+        + IsScreen() bool
+        + Output(text string) 
+        + PrintChoiceMenu() (string, error)
+        + PrintHardwareMenu() 
+        + ShowHardwareConfMenu(choice string) 
+
+    }
+    class "ServerManager" << (S,Aquamarine) >> {
+        - wg sync.WaitGroup
+        - configs <font color=blue>map</font>[string]string
+        - devices []interfaces.Device
+        - users []control.Client
+
+        + NetManager *network.NetworkManager
+        + AcessControl *services.AccessControl
+        + CollingManager *managres.CoolingManager
+        + BackupManager *managres.BackupManager
+        + AlertManager *services.AlertManager
+
+        + GetConfig(key string) string
+        + SetConfig(key string, value string) 
+        + AddTask(task <font color=blue>func</font>() ) 
+        + Wait() 
+        + GetDevices() []interfaces.Device
+
+    }
+        namespace include {
+    class "Creator" as Creator_generic_T <<[T]>> {
+    }
+    class "T" <<type parameter>> {
+        constraints: any
+    }
+        }
+    }
+}
+namespace interfaces {
+    interface "Connection"  {
+        + EstablishConnection() error
+        + CloseConnection() error
+        + ShowRemoteFiles() error
+        + ListRemoteFiles() error
+        + DownRemoteloadFile() error
+
+    }
+    interface "Device"  {
+        + GetType() string
+        + GetUAPI() net.Listener
+        + GetMaxTemp() float32
+        + Connect() error
+        + Disconnect() error
+
+    }
+}
+namespace services {
+    class "AccessControl" << (S,Aquamarine) >> {
+        - usersPermisions <font color=blue>map</font>[uint64]*control.Client
+
+        + AddUser(client control.Client) error
+        + RemoveUser(client control.Client) error
+        + SetUserPermission(id uint64, permission bool) error
+
+    }
+    class "AlertManager" << (S,Aquamarine) >> {
+        - alerts []error
+
+        + GetAlerts() 
+        + AddAlert(err error) 
+
+    }
+}
+
+
+"Lab2.services.additioal.DeviceInfo""uses" o-- "net.Listener"
+"Lab2.services.connect.FTPConnetcion""uses" o-- "net.Conn"
+"Lab2.services.connect.SMBConnetcion""uses" o-- "net.Conn"
+"Lab2.services.devices.CPU""uses" o-- "additioal.DeviceInfo"
+"Lab2.services.devices.Disk""uses" o-- "additioal.DeviceInfo"
+"Lab2.services.devices.RAM""uses" o-- "additioal.DeviceInfo"
+"Lab2.services.managres.BackupManager""uses" o-- "bytes.Buffer"
+"Lab2.services.managres.CoolingDevice""uses" o-- "net.Listener"
+"Lab2.services.managres.CoolingManager""uses" o-- "interfaces.Device"
+"Lab2.services.managres.CoolingManager""uses" o-- "net.Listener"
+"Lab2.services.network.Firewall""uses" o-- "net.Conn"
+"Lab2.services.network.Firewall""uses" o-- "net.IP"
+"Lab2.services.network.NetworkManager""uses" o-- "Lab2.services.network.Firewall"
+"Lab2.services.network.NetworkManager""uses" o-- "Lab2.services.network.Requesrt"
+"Lab2.services.network.NetworkManager""uses" o-- "hash.Hash"
+"Lab2.services.network.NetworkManager""uses" o-- "interfaces.Connection"
+"Lab2.services.network.control.Client""uses" o-- "interfaces.Connection"
+"Lab2.services.network.control.Client""uses" o-- "net.IP"
+"cmd.cmdManager.ScreenManager""uses" o-- "cmd.cmdManager.ServerManager"
+"cmd.cmdManager.ServerManager""uses" o-- "control.Client"
+"cmd.cmdManager.ServerManager""uses" o-- "interfaces.Device"
+"cmd.cmdManager.ServerManager""uses" o-- "managres.BackupManager"
+"cmd.cmdManager.ServerManager""uses" o-- "managres.CoolingManager"
+"cmd.cmdManager.ServerManager""uses" o-- "network.NetworkManager"
+"cmd.cmdManager.ServerManager""uses" o-- "services.AccessControl"
+"cmd.cmdManager.ServerManager""uses" o-- "services.AlertManager"
+"cmd.cmdManager.ServerManager""uses" o-- "sync.WaitGroup"
+"services.AccessControl""uses" o-- "control.Client"
+
+"T" <-- "param" "Creator_generic_T"
+
+@enduml

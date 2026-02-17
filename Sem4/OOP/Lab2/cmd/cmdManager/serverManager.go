@@ -5,22 +5,33 @@ import (
 	"Lab1/services"
 	"Lab1/services/managres"
 	"Lab1/services/network"
+	"Lab1/services/network/control"
 	"sync"
 )
 
 type ServerManager struct {
-	wg             sync.WaitGroup
-	configs        map[string]string
-	devices        []interfaces.Device
-	netManager     *network.NetworkManager
-	acessControl   *services.AccessControl
-	collingManafer *managres.CoolingManager
-	backupManager  *managres.BackupManager
+	wg      sync.WaitGroup
+	configs map[string]string
+	devices []interfaces.Device
+	users   []control.Client
+
+	//Manager Sections
+	NetManager     *network.NetworkManager
+	AcessControl   *services.AccessControl
+	CollingManager *managres.CoolingManager
+	BackupManager  *managres.BackupManager
+	AlertManager   *services.AlertManager
 }
 
 func NewServerManager() *ServerManager {
 	return &ServerManager{
-		configs: make(map[string]string),
+		configs:       make(map[string]string),
+		devices:       make([]interfaces.Device, 0),
+		users:         make([]control.Client, 0),
+		AcessControl:  services.NewAccessControl(),
+		BackupManager: managres.NewBackupManager(3, true),
+		AlertManager:  services.NewAlertManager(),
+		//CollingManager: managres.NewCoolingManager(),
 	}
 }
 
@@ -41,4 +52,8 @@ func (sm *ServerManager) AddTask(task func()) {
 
 func (sm *ServerManager) Wait() {
 	sm.wg.Wait()
+}
+
+func (sm *ServerManager) GetDevices() []interfaces.Device {
+	return sm.devices
 }
