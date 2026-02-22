@@ -1,38 +1,52 @@
 
+using System.Collections.Immutable;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+
+
 namespace Lab2.Services;
 
-public class StreamService <T> where T : unmanaged
+public class StreamService <T>
 {
 
-
-    [Obsolete("Obsolete")]
-    public async Task WriteToStreamAync(Stream stream, IEnumerable<T> data)
+    
+    public async Task WriteToStreamAync(Stream stream, IEnumerable<T> data, IProgress<string> progress)
     {
-        var enumerable = data as T[] ?? data.ToArray();
         var byteArray = new List<Byte>();
-        foreach (var e in enumerable)
+        foreach (var e in data)
         {
-            var bout = ByteFormatter<T>.ObjectToByteArray(e);
-            byteArray.AddRange(bout);
+            var byteObj = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e));
+            var byteObjSize = byteObj.Length;
+            byteArray.AddRange(BitConverter.GetBytes(byteObjSize));
+            byteArray.AddRange(byteObj);
         }
-
-        await Task.Delay(3000);
         
+        progress.Report($"Write start in {Thread.CurrentThread.ManagedThreadId}\n");
         await stream.WriteAsync(byteArray.ToArray(), 0, byteArray.Count);
-        
+        await Task.Delay(3000);
+        progress.Report($"Write ended in {Thread.CurrentThread.ManagedThreadId} \n");
     }
-
-
-    [Obsolete("Obsolete")]
-    public async Task CopyFromStreamAsync(Stream stream, string fyleName,  IProgress<string> progress)
+    
+    public async Task CopyFromStreamAsync(Stream stream, string fileName,  IProgress<string> progress)
     {
 
-        using StreamWriter writer = new StreamWriter(fyleName);
-        var byteArray = new  Byte[stream.Length];
-        await stream.ReadAtLeastAsync(byteArray, 0, false);
-        var data = ByteFormatter<T>.ByteArrayToIEnum(byteArray);
-        writer.Write(data);
-
+        using FileStream writer = new FileStream(
+            fileName,
+            FileMode.Create,
+            FileAccess.Write,
+            FileShare.None,
+            4096,
+            true
+            );
+     
+        progress.Report($"Copy start in {Thread.CurrentThread.ManagedThreadId}\n");
+        if (stream.CanSeek) stream.Seek(0, SeekOrigin.Begin);
+        await stream.CopyToAsync(writer);
+        
+        progress.Report($"Copy ended in {Thread.CurrentThread.ManagedThreadId}\n");
+       
         
     }
 
@@ -43,25 +57,35 @@ public class StreamService <T> where T : unmanaged
         using FileStream reader = new FileStream(
             fileName,
             FileMode.Open,
-            FileAccess.Read,
+            FileAccess.ReadWrite,
             FileShare.Read,
-            bufferSize: default,
+            bufferSize: 4096,
             useAsync:true
             );
-        var data = new Byte[reader.Length];
-        await reader.ReadExactlyAsync(data);
+        if (reader.CanSeek) reader.Seek(0, SeekOrigin.Begin);
 
-        var dataType = ByteConverter.Convert<T>(data);
-        foreach (var e in dataType)
-        {
-            if (filter(e))
+        int stepInFile = 0;
+        var size = new byte[4];
+        var element =new byte[reader.Length];
+        while (stepInFile < reader.Length)
+        { 
+            await reader.ReadExactlyAsync(size, 0, 4);
+            var objSize = BitConverter.ToInt32(size, 0);
+            reader.Seek(stepInFile + 4, SeekOrigin.Begin);
+            await reader.ReadExactlyAsync(element, 0, objSize);
+            stepInFile += objSize + 4;
+            reader.Seek(stepInFile, SeekOrigin.Begin);
+            
+            var obj  =  JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(element.Take(objSize).ToArray()));
+            if (filter(obj))
             {
                 cоunter++;
             }
         }
-
-
         return cоunter;
     }
+    
+    
+    
     
 }

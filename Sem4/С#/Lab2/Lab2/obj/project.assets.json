@@ -1,11 +1,80 @@
 {
   "version": 3,
   "targets": {
-    "net9.0": {}
+    "net9.0": {
+      "LoremNET/2.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/LoremNET.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/LoremNET.dll": {}
+        }
+      },
+      "Newtonsoft.Json/13.0.5-beta1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "LoremNET/2.0.0": {
+      "sha512": "qLvVQSAqVVQKptrbw0BV0nPJoaCp4wH38BCwCUl9cD/F6U8kLqWR1FcWqk3ATg6443rDYoI8y0lQbrVk9qDLLg==",
+      "type": "package",
+      "path": "loremnet/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/LoremNET.dll",
+        "loremnet.2.0.0.nupkg.sha512",
+        "loremnet.nuspec"
+      ]
+    },
+    "Newtonsoft.Json/13.0.5-beta1": {
+      "sha512": "cGxikAY78u8CPfIT7mkICvI2ZNL7oDsC+DzgVWxtU5DmNhF2qDcU3YheDitdO9TKIra6Y5rHRD2T7oEexbAbLA==",
+      "type": "package",
+      "path": "newtonsoft.json/13.0.5-beta1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/net6.0/Newtonsoft.Json.dll",
+        "lib/net6.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "newtonsoft.json.13.0.5-beta1.nupkg.sha512",
+        "newtonsoft.json.nuspec",
+        "packageIcon.png"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net9.0": []
+    "net9.0": [
+      "LoremNET >= 2.0.0",
+      "Newtonsoft.Json >= 13.0.5-beta1"
+    ]
   },
   "packageFolders": {
     "/home/udainoko/.nuget/packages/": {}
@@ -49,6 +118,16 @@
     "frameworks": {
       "net9.0": {
         "targetAlias": "net9.0",
+        "dependencies": {
+          "LoremNET": {
+            "target": "Package",
+            "version": "[2.0.0, )"
+          },
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "[13.0.5-beta1, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

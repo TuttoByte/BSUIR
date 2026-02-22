@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "Op4wfD4zlqI=",
+  "dgSpecHash": "BZv5NG2ijFY=",
   "success": true,
   "projectFilePath": "/home/udainoko/Documents/BSUIR/Sem4/С#/Lab2/Lab2/Lab2.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/udainoko/.nuget/packages/loremnet/2.0.0/loremnet.2.0.0.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/newtonsoft.json/13.0.5-beta1/newtonsoft.json.13.0.5-beta1.nupkg.sha512"
+  ],
   "logs": []
 }
