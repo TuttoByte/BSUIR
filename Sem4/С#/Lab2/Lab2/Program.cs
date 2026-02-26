@@ -12,6 +12,9 @@ namespace Lab2;
 {
     static async Task Main(string[] args)
     {
+        
+        Console.WriteLine($"Work started {Thread.CurrentThread.ManagedThreadId}");
+        
 
         var progress = new Progress<string>(ThredEndReport);
         var memStram = new MemoryStream();
@@ -34,14 +37,13 @@ namespace Lab2;
         
         
         
-       await streamServe.WriteToStreamAync(memStram, patientList,  progress);
-       await streamServe.CopyFromStreamAsync(memStram, "/home/udainoko/Documents/BSUIR/Sem4/С#/Lab2/Lab2/FIles/Test.txt", progress);
+       Task task1 = Task.Run(()=>streamServe.WriteToStreamAync(memStram, patientList,  progress));
+       Task task2 = task1.ContinueWith((Task t) => streamServe.CopyFromStreamAsync(memStram, "/home/udainoko/Documents/BSUIR/Sem4/С#/Lab2/Lab2/FIles/Test.txt", progress));
 
-       Task.WaitAll();
+       Task.WaitAll(task2);
        
 
         int num = await streamServe.GetStatisticsAsync("/home/udainoko/Documents/BSUIR/Sem4/С#/Lab2/Lab2/FIles/Test.txt", filter);
-        Task.WaitAll();
         Console.WriteLine($"Number of patients with Asthma: {num}");
     }
     
