@@ -1,12 +1,5 @@
-[2026-02-26T14:45:20-05:00] ID: ORD-256-X | Type: Premium | Total: 1674.00
-[2026-02-26T14:48:16-05:00] ID: ORD-256-X | Type: Premium | Total: 1674.00
-[2026-02-26T14:52:54-05:00] ID: ORD-256-X | Type: Premium | Total: 1674.00
-[2026-02-26T18:25:21-05:00] ID: ORD-256-X | Type: Premium | Total: 1674.00
-[2026-02-26T18:30:20-05:00] ID: ORD-256-X | Type: Premium | Total: 1674.00
-[2026-02-26T18:32:52-05:00] ID: ORD-256-X | Type: Premium | Total: 1674.00
-[2026-02-26T18:33:36-05:00] ID: ORD-256-X | Type: Premium | Total: 1674.00
-[2026-02-26T18:34:27-05:00] ID: ORD-256-X | Type: Premium | Total: 1674.00
-[2026-02-26T18:35:06-05:00] ID: ORD-256-X | Type: Premium | Total: 1674.00
-[2026-02-27T03:26:23-05:00] ID: ORD-256-X | Type: &{} | Total: 1674.00
-[2026-03-03T10:55:55-05:00] ID: {ORD-256-X [{1 Thermal Clips %!s(float64=1500)} {2 UNATCO Pass Card %!s(float64=50)}] %!s(*classes.PremiumTax=&{}) jeevacation@gmail.com  {Agartha 33 Thomas Street [REDACTED]} <nil>} | Type: %!s(float64=1674) | Total: %!f(MISSING)
-[2026-03-03T10:56:54-05:00] ID: {ORD-256-X [{1 Thermal Clips %!s(float64=1500)} {2 UNATCO Pass Card %!s(float64=50)}] %!s(*classes.PremiumTax=&{}) jeevacation@gmail.com  {Agartha 33 Thomas Street [REDACTED]} <nil>} | Type: %!s(float64=1674) | Total: %!f(MISSING)
+[2026-03-03T11:01:49-05:00] ID: {ORD-256-X [{1 Thermal Clips %!s(float64=1500)} {2 UNATCO Pass Card %!s(float64=50)}] %!s(*classes.PremiumTax=&{}) jeevacation@gmail.com  {Agartha 33 Thomas Street [REDACTED]} <nil>} | Type: %!s(float64=1674) | Total: %!f(MISSING)
+[2026-03-03T11:13:29-05:00] ID: {ORD-256-X [{1 Thermal Clips %!s(float64=1500)} {2 UNATCO Pass Card %!s(float64=50)}] %!s(*classes.PremiumTax=&{}) jeevacation@gmail.com  {Agartha 33 Thomas Street [REDACTED]} %!s(*classes.GoldenCard=&{0.15})} | Type: %!s(float64=1674) | Total: %!f(MISSING)
+[2026-03-03T11:14:41-05:00] ID: {ORD-256-X [{1 Thermal Clips %!s(float64=1500)} {2 UNATCO Pass Card %!s(float64=50)}] %!s(*classes.PremiumTax=&{}) jeevacation@gmail.com  {Agartha 33 Thomas Street [REDACTED]} %!s(*classes.GoldenCard=&{0.15})} | Type: %!s(float64=1674) | Total: %!f(MISSING)
+[2026-03-03T11:16:08-05:00] ID: {ORD-256-X [{1 Thermal Clips %!s(float64=1500)} {2 UNATCO Pass Card %!s(float64=50)}] %!s(*classes.PremiumTax=&{}) jeevacation@gmail.com  {Agartha 33 Thomas Street [REDACTED]} %!s(*classes.GoldenCard=&{0.15})} | Type: %!s(float64=1674) | Total: %!f(MISSING)
+[2026-03-03T11:17:31-05:00] ID: {ORD-256-X [{1 Thermal Clips %!s(float64=1500)} {2 UNATCO Pass Card %!s(float64=50)}] %!s(*classes.PremiumTax=&{}) jeevacation@gmail.com  {Agartha 33 Thomas Street [REDACTED]} %!s(*classes.GoldenCard=&{0.15})} | Type: %!s(float64=1674) | Total: %!f(MISSING)

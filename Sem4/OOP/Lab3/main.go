@@ -26,6 +26,7 @@ func main() {
 		},
 		ClientEmail: "jeevacation@gmail.com",
 		Destination: classes.Address{City: "Agartha", Street: "33 Thomas Street", Zip: "[REDACTED]"},
+		Discount:    classes.NewGolden(),
 	}
 
 	// 2. Инициализация процессора

@@ -19,6 +19,7 @@ type OrderProcessor struct {
 	dbManager   *managers.DbManager
 	connManager *managers.ConnectionManager
 	logger      *monitor.CustomLogger
+	calcManager *managers.Calculator
 }
 
 func NewOrderProcessor(logger *monitor.CustomLogger) *OrderProcessor {
@@ -26,6 +27,7 @@ func NewOrderProcessor(logger *monitor.CustomLogger) *OrderProcessor {
 		dbManager:   managers.NewDbManager(infastruct.NewMySQLDatabase()),
 		connManager: managers.NewConnectionManager(conn.NewTelegramConnection("admin"), conn.NewSMTPConnection("10.0.0.1")),
 		logger:      logger,
+		calcManager: managers.NewCalculator(),
 	}
 }
 
@@ -41,14 +43,6 @@ func (op *OrderProcessor) validate(order classes.Order) error {
 	return nil
 }
 
-func (op *OrderProcessor) sumCalculate(order classes.Order) float64 {
-	var total float64
-	for _, item := range order.Items {
-		total += item.Price
-	}
-	return total
-}
-
 func (op *OrderProcessor) Process(order classes.Order) error {
 	fmt.Printf("--- Processing Order %s ---\n", order.ID)
 
@@ -60,7 +54,7 @@ func (op *OrderProcessor) Process(order classes.Order) error {
 	}
 
 	// 2. Логика расчета суммы
-	total := op.sumCalculate(order)
+	total := op.calcManager.SumCalculate(order)
 
 	// 3. Логика скидок и налогов
 	total, err = order.Type.Calculate(order, total)

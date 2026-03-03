@@ -6,20 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="121b6295-6841-4170-8d4f-c177d81160b3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../Metra/PZ1" beforeDir="false" afterPath="$PROJECT_DIR$/../../Metra/PZ1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/orders_db.txt" beforeDir="false" afterPath="$PROJECT_DIR$/orders_db.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/classes/tax.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/classes/tax.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/classes/models.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/classes/models.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/conn/smtp.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/conn/smtp.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/conn/telegram.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/conn/telegram.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/infrastructure.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/managers/conn.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/managers/conn.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/models.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/infrastruct/calculator.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/managers/calculator.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/processor.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/processor.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/staff.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/staff.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../С#/Lab2/Lab2/obj/Debug/net9.0/Lab2.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../С#/Lab2/Lab2/obj/Debug/net9.0/Lab2.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../С#/Lab2/Lab2/obj/Debug/net9.0/Lab2.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../С#/Lab2/Lab2/obj/Debug/net9.0/Lab2.AssemblyInfoInputs.cache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +58,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services/managers" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="go build Lab3" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
       <module name="Lab3" />
