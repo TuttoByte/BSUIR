@@ -1,4 +1,6 @@
-package services
+package classes
+
+import infastruct "Lab3/services/infrastruct"
 
 // =========================================================
 // Файл: models.go
@@ -21,10 +23,11 @@ type Address struct {
 
 // Order - заказ
 type Order struct {
-	ID          string
-	Items       []Item
-	Type        string // "Standard", "Premium", "Budget", "International"
-	ClientEmail string
-	Destination Address
+	ID                    string
+	Items                 []Item
+	Type                  Tax
+	ClientEmail           string
+	ClientTelegramTockern string
+	Destination           Address
+	Discount              infastruct.Discout
 }
-

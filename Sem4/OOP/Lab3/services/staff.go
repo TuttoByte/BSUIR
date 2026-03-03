@@ -8,10 +8,23 @@ import "fmt"
 // =========================================================
 
 type WarehouseWorker interface {
+	DoWork()
+}
+
+type ProccessWorker interface {
 	ProcessOrder()
+}
+
+type ProccessAttendor interface {
 	AttendMeeting()
-	GetRest()
+}
+
+type ProccessSwinging interface {
 	SwingingTheLead()
+}
+
+type ProcessResting interface {
+	GetRest()
 }
 
 // HumanManager - Человек
@@ -32,6 +45,12 @@ func (h HumanManager) GetRest() {
 func (h HumanManager) SwingingTheLead() {
 	fmt.Println("Manager is watching reels...")
 }
+func (h HumanManager) DoWork() {
+	h.ProcessOrder()
+	h.AttendMeeting()
+	h.SwingingTheLead()
+	h.GetRest()
+}
 
 // RobotPacker - Робот
 type RobotPacker struct {
@@ -46,21 +65,15 @@ func (r RobotPacker) GetRest() {
 	fmt.Println("Robot was taken for maintenance")
 }
 
-func (r RobotPacker) AttendMeeting() {
-	fmt.Println("ERROR: Robot cannot attend meetings")
-}
-
-func (r RobotPacker) SwingingTheLead() {
-	panic("CRITICAL ERROR: Robot cannot waste our money (we hope so)")
+func (r RobotPacker) DoWork() {
+	r.ProcessOrder()
+	r.GetRest()
 }
 
 // ManageWarehouse - функция, которая работает со списком работников
 func ManageWarehouse(workers []WarehouseWorker) {
 	fmt.Println("\n--- Warehouse Shift Started ---")
 	for _, worker := range workers {
-		worker.ProcessOrder()
-		worker.AttendMeeting()
-		worker.GetRest()
-		worker.SwingingTheLead()
+		worker.DoWork()
 	}
 }

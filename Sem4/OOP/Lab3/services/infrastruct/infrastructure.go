@@ -1,4 +1,4 @@
-package services
+package infastruct
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ func NewMySQLDatabase() *RandomSQLDatabase {
 }
 
 // Сохранение заказа в "базу данных"
-func (db *RandomSQLDatabase) SaveOrder(order Order, total float64) error {
+func (db *RandomSQLDatabase) SaveOrder(order interface{}, total float64) error {
 	fmt.Println("Connecting to RandomSQL at", db.ConnectionString, "...")
 	time.Sleep(500 * time.Millisecond) // Имитация задержки сети
 
@@ -31,17 +31,10 @@ func (db *RandomSQLDatabase) SaveOrder(order Order, total float64) error {
 	}
 	defer file.Close()
 
-	record := fmt.Sprintf("[%s] ID: %s | Type: %s | Total: %.2f\n", time.Now().Format(time.RFC3339), order.ID, order.Type, total)
+	record := fmt.Sprintf("[%s] ID: %s | Type: %s | Total: %.2f\n", time.Now().Format(time.RFC3339), order, total)
 	if _, err := file.WriteString(record); err != nil {
 		return err
 	}
 	fmt.Println("Order saved successfully.")
 	return nil
 }
-
-// SmtpMailer - имитация почтового сервиса
-type SmtpMailer struct {
-	Server string
-}
-
-

@@ -1,12 +1,13 @@
 package services
 
 import (
+	"Lab3/services/classes"
 	"Lab3/services/conn"
+	infastruct "Lab3/services/infrastruct"
 	"Lab3/services/managers"
+	"Lab3/services/monitor"
 	"errors"
 	"fmt"
-
-	"go.uber.org/zap"
 )
 
 // =========================================================
@@ -15,19 +16,20 @@ import (
 // =========================================================
 
 type OrderProcessor struct {
-	database    *RandomSQLDatabase
+	dbManager   *managers.DbManager
 	connManager *managers.ConnectionManager
-	logger      *zap.SugaredLogger
+	logger      *monitor.CustomLogger
 }
 
-func NewOrderProcessor() *OrderProcessor {
+func NewOrderProcessor(logger *monitor.CustomLogger) *OrderProcessor {
 	return &OrderProcessor{
-		database:    NewMySQLDatabase(),
+		dbManager:   managers.NewDbManager(infastruct.NewMySQLDatabase()),
 		connManager: managers.NewConnectionManager(conn.NewTelegramConnection("admin"), conn.NewSMTPConnection("10.0.0.1")),
+		logger:      logger,
 	}
 }
 
-func (op *OrderProcessor) validate(order Order) error {
+func (op *OrderProcessor) validate(order classes.Order) error {
 
 	if len(order.Items) == 0 {
 		return errors.New("order must have at least one item")
@@ -39,7 +41,7 @@ func (op *OrderProcessor) validate(order Order) error {
 	return nil
 }
 
-func (op *OrderProcessor) sumCalculate(order Order) float64 {
+func (op *OrderProcessor) sumCalculate(order classes.Order) float64 {
 	var total float64
 	for _, item := range order.Items {
 		total += item.Price
@@ -47,13 +49,13 @@ func (op *OrderProcessor) sumCalculate(order Order) float64 {
 	return total
 }
 
-
-func (op *OrderProcessor) Process(order Order) error {
+func (op *OrderProcessor) Process(order classes.Order) error {
 	fmt.Printf("--- Processing Order %s ---\n", order.ID)
 
 	// 1. Логика валидации
 	err := op.validate(order)
 	if err != nil {
+		op.logger.Error("|Process|", err)
 		return err
 	}
 
@@ -61,35 +63,21 @@ func (op *OrderProcessor) Process(order Order) error {
 	total := op.sumCalculate(order)
 
 	// 3. Логика скидок и налогов
-	switch order.Type {
-	case "Standard":
-		// Стандартный налог
-		total = total * 1.2
-	case "Premium":
-		// Скидка 10% + налог
-		total = (total * 0.9) * 1.2
-	case "Budget":
-		if len(order.Items) > 3 {
-			fmt.Println("Budget orders cannot have more than 3 items. Skipping.")
-			return nil
-		}
-	case "International":
-		total = total * 1.5 // Таможенный сбор
-		if order.Destination.City == "Nowhere" {
-			return errors.New("cannot ship to Nowhere")
-		}
-	default:
-		return errors.New("unknown order type")
+	total, err = order.Type.Calculate(order, total)
+	if err != nil {
+		op.logger.Error("|Process|", err)
+		return err
 	}
 
 	// 4. Логика сохранения
-	if err := op.database.SaveOrder(order, total); err != nil {
-		return fmt.Errorf("database error: %w", err)
+	_, err = op.dbManager.AddOrderToDataBase(order, total, op.logger)
+	if err != nil {
+		op.logger.Error("|Process|", err)
 	}
 
 	// 5. Логика уведомлений
 	msgBody := fmt.Sprintf("<h1>Your order %s is confirmed!</h1><p>Total: %.2f</p>", order.ID, total)
-	op.connManager.SendOverConnection(msgBody)
+	op.connManager.SendOverConnection(msgBody, op.logger)
 
 	return nil
 }

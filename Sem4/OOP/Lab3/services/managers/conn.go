@@ -1,9 +1,14 @@
 package managers
 
+import (
+	"Lab3/services/monitor"
+	"fmt"
+)
+
 type Connection interface {
-	Connect()
-	Disconnect()
-	Send(msg string)
+	Connect(logger *monitor.CustomLogger)
+	Disconnect(logger *monitor.CustomLogger)
+	Send(msg string, logger *monitor.CustomLogger)
 }
 
 type ConnectionManager struct {
@@ -14,18 +19,17 @@ func NewConnectionManager(args ...Connection) *ConnectionManager {
 
 	conns := make([]Connection, len(args))
 
-	for _, conn := range args {
-		conns = append(conns, conn)
-	}
+	copy(conns, args)
 
 	return &ConnectionManager{
 		conns: conns,
 	}
 
 }
-func (c *ConnectionManager) SendOverConnection(msg string) {
+func (c *ConnectionManager) SendOverConnection(msg string, logger *monitor.CustomLogger) {
 	for _, conn := range c.conns {
-		conn.Connect()
-		conn.Send(msg)
+		fmt.Println(conn)
+		conn.Connect(logger)
+		conn.Send(msg, logger)
 	}
 }

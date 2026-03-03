@@ -1,6 +1,9 @@
 package conn
 
-import "fmt"
+import (
+	"Lab3/services/monitor"
+	"fmt"
+)
 
 type SMTPConnection struct {
 	server string
@@ -13,15 +16,14 @@ func NewSMTPConnection(ip string) *SMTPConnection {
 	}
 }
 
-func (s *SMTPConnection) Connect() {
-	fmt.Printf(">> Connecting to SMTP server %s...\n", s.server)
+func (s *SMTPConnection) Connect(logger *monitor.CustomLogger) {
+	logger.Info(">> Connecting to SMTP server %s...\n", s.server)
 }
 
-func (s *SMTPConnection) Disconnect() {
-	fmt.Printf(">> Disconnect from SMTP server %s...\n", s.server)
+func (s *SMTPConnection) Disconnect(logger *monitor.CustomLogger) {
+	logger.Info(">> Disconnect from SMTP server %s...\n", s.server)
 }
 
-func (s *SMTPConnection) Send(msg string) {
-	fmt.Println("Sending over smtp")
-	fmt.Println(msg)
+func (s *SMTPConnection) Send(msg string, logger *monitor.CustomLogger) {
+	logger.Info(">> SMTP sended with connection over server " + s.server)
 }

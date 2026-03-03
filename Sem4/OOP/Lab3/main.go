@@ -2,6 +2,8 @@ package main
 
 import (
 	"Lab3/services"
+	"Lab3/services/classes"
+	"Lab3/services/monitor"
 	"fmt"
 	"log"
 )
@@ -12,20 +14,22 @@ import (
 // =========================================================
 
 func main() {
+
+	logger := monitor.NewCustomLogger()
 	// 1. Создание заказа
-	order := services.Order{
+	order := classes.Order{
 		ID:   "ORD-256-X",
-		Type: "Premium",
-		Items: []services.Item{
+		Type: &classes.PremiumTax{},
+		Items: []classes.Item{
 			{ID: "1", Name: "Thermal Clips", Price: 1500},
 			{ID: "2", Name: "UNATCO Pass Card", Price: 50},
 		},
 		ClientEmail: "jeevacation@gmail.com",
-		Destination: services.Address{City: "Agartha", Street: "33 Thomas Street", Zip: "[REDACTED]"},
+		Destination: classes.Address{City: "Agartha", Street: "33 Thomas Street", Zip: "[REDACTED]"},
 	}
 
 	// 2. Инициализация процессора
-	processor := services.NewOrderProcessor()
+	processor := services.NewOrderProcessor(logger)
 
 	// 3. Обработка заказа
 	if err := processor.Process(order); err != nil {
