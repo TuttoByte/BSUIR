@@ -40,22 +40,22 @@
                                 
                                
                                 
-                                <Button Content="7"/>
-                                <Button Content="8"/>
-                                <Button Content="9"/>
+                                <Button x:Name="Button7" Tag="7" Content="7" Click="OnNumericButtonClick"/>
+                                <Button x:Name="Button8" Tag="8" Content="8"/>
+                                <Button x:Name="Button9" Tag = "9" Content="9"/>
                                 <Button Classes="func" Content="{StaticResource MultiplyIcon}"/>
-                                <Button Content="4"/>
-                                <Button Content="5"/>
-                                <Button Content="6"/>
+                                <Button x:Name="Button4" Tag = "4" Content="4"/>
+                                <Button x:Name="Button5" Tag = "5" Content="5"/>
+                                <Button x:Name="Button6" Tag = "6" Content="6"/>
                                 <Button Classes="func" Content="{StaticResource MinusIcon}"/>
-                                <Button Content="1"/>
-                                <Button Content="2"/>
-                                <Button Content="3"/>
-                                <Button Classes="func" Content="{StaticResource PlusIcon}"/>
+                                <Button x:Name="Button1" Tag = "1" Content="1"/>
+                                <Button x:Name="Button2" Tag = "2" Content="2"/>
+                                <Button x:Name="Button3" Tag = "3" Content="3"/>
+                                <Button Classes="func"  Tag = "Sum" Content="{StaticResource PlusIcon}" Click="OnOperationButtonClick"/>
                                 <Button Content="+/-" Foreground = "{StaticResource PrColor}"/>
-                                <Button Content="0"/>
+                                <Button x:Name="Button0" Tag = "9" Content="0"/>
                                 <Button Classes="func" Content="." Foreground="{StaticResource PrColor}"/>
-                                <Button Classes="func" Content="{StaticResource EqualsIcon}"/>
+                                <Button Classes="func" Content="{StaticResource EqualsIcon}" Click="OnResultButtonClick"/>
                                 
                         </WrapPanel>
                 </Grid>
