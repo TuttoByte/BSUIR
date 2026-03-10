@@ -10,12 +10,12 @@ import (
 )
 
 type DbManager struct {
-	db        *infastruct.RandomSQLDatabase
+	db        infastruct.DataBase
 	hash      hash.Hash
 	hashTable map[string]byte
 }
 
-func NewDbManager(db *infastruct.RandomSQLDatabase) *DbManager {
+func NewDbManager(db infastruct.DataBase) *DbManager {
 	return &DbManager{
 		db:        db,
 		hash:      sha256.New(),
@@ -42,12 +42,13 @@ func (d *DbManager) AddOrderToDataBase(order classes.Order, total float64, logge
 		return false, err
 	}
 	if ok {
-		logger.Info("Already in database")
+		logger.Info("DataBase", "Already in database")
 		return true, nil
 	}
 	err = d.db.SaveOrder(order, total)
 	if err != nil {
 		return false, err
 	}
+	logger.Info("DataBase", "Added order", order)
 	return false, nil
 }

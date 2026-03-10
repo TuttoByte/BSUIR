@@ -1,0 +1,66 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="AvaloniaApplication7.MainWindow"
+        Title="Calcualtor"
+        SizeToContent="WidthAndHeight"
+        Background="Transparent"
+        BorderThickness="0"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        ExtendClientAreaToDecorationsHint="False"
+        SystemDecorations="None"
+        WindowStartupLocation="CenterScreen">
+    
+        
+        
+        <Border CornerRadius="30" Background="{StaticResource BgColor}">
+                <Grid RowDefinitions="Auto, Auto" Margin="5">
+                        <Grid Grid.Row="0" RowDefinitions="*,*" Margin="0, 40">
+                                <TextBlock Grid.Row="0" Text="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                           Foreground="{StaticResource PrColor}" FontSize = "40" FontWeight = "Medium"/>
+                                
+                                <TextBlock Grid.Row="1" Text="0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                           Foreground="Black" FontSize = "22" FontWeight = "Medium"/>
+                        </Grid>
+                        
+                        <WrapPanel Grid.Row="1" MaxWidth="400">
+                                
+                                <Button Content="%" Foreground="{StaticResource PrColor}"/>
+                                <Button Content="CE" Foreground="{StaticResource PrColor}"/>
+                                <Button Content="C" Foreground="{StaticResource PrColor}"/>
+                                <Button Classes="func" Content="{StaticResource BackspaceIcon}"  Foreground="{StaticResource PrColor}"/>
+                                
+                                <Button Classes="func" Content="x⁻¹"  Foreground="{StaticResource PrColor}"/>
+                                <Button Classes="func" Content="x²"  Foreground="{StaticResource PrColor}"/>
+                                <Button Classes="func" Content="{StaticResource SqrtIcon}"  Foreground="{StaticResource PrColor}"/>
+                                <Button Classes="func" Content="{StaticResource DivideIcon}"/>
+                                
+                               
+                                
+                                <Button Content="7"/>
+                                <Button Content="8"/>
+                                <Button Content="9"/>
+                                <Button Classes="func" Content="{StaticResource MultiplyIcon}"/>
+                                <Button Content="4"/>
+                                <Button Content="5"/>
+                                <Button Content="6"/>
+                                <Button Classes="func" Content="{StaticResource MinusIcon}"/>
+                                <Button Content="1"/>
+                                <Button Content="2"/>
+                                <Button Content="3"/>
+                                <Button Classes="func" Content="{StaticResource PlusIcon}"/>
+                                <Button Content="+/-" Foreground = "{StaticResource PrColor}"/>
+                                <Button Content="0"/>
+                                <Button Classes="func" Content="." Foreground="{StaticResource PrColor}"/>
+                                <Button Classes="func" Content="{StaticResource EqualsIcon}"/>
+                                
+                        </WrapPanel>
+                </Grid>
+        
+        </Border>
+        
+        
+</Window>

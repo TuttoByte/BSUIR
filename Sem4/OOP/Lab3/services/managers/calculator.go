@@ -2,6 +2,10 @@ package managers
 
 import "Lab3/services/classes"
 
+type SimpleCalculator interface {
+	SumCalculate(order classes.Order) float64
+}
+
 type Calculator struct {
 }
 

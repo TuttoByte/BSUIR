@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+type DataBase interface {
+	SaveOrder(order interface{}, total float64) error
+}
+
 // =========================================================
 // Файл: infrastructure.go
 // Описание: Имитация работы с БД и внешними сервисами.

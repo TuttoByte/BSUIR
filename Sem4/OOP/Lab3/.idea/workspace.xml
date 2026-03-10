@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="121b6295-6841-4170-8d4f-c177d81160b3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../AVS/PZ1/data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../../AVS/PZ1/data.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../AVS/PZ1/main" beforeDir="false" afterPath="$PROJECT_DIR$/../../AVS/PZ1/main" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../AVS/PZ1/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../AVS/PZ1/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Metra/PZ1" beforeDir="false" afterPath="$PROJECT_DIR$/../../Metra/PZ1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orders_db.txt" beforeDir="false" afterPath="$PROJECT_DIR$/orders_db.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/classes/models.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/classes/models.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/conn/smtp.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/conn/smtp.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/conn/telegram.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/conn/telegram.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/infrastruct/calculator.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/managers/calculator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/infrastruct/infrastructure.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/infrastruct/infrastructure.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/managers/calculator.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/managers/calculator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/managers/dbManager.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/managers/dbManager.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/processor.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/processor.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

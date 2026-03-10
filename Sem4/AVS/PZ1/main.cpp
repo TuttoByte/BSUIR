@@ -20,7 +20,7 @@ int main(){
     std::cin>>eps;
 
 
-    std::ofstream csv("data.csv");
+    std::ofstream csv("dataOn1.csv");
     csv << "Time,Iterations" << std::endl;
 
     std::cout << "\n" << std::setw(10) << "x" << std::setw(15) << "Y(x)" << std::setw(15) << "S(x)" << std::setw(10) << "n" << std::abort;
@@ -28,12 +28,11 @@ int main(){
 
 
     for (double x = a; x <= b; x += h){
-       double y_x = 2 * (fpu_sqr(fpu_cos(x)) - 1);
-       int n = 0;
-       double s_x = 0, temp = 0;
+        int n = 0;
+        double s_x = 0, temp = 0;
 
-
-       auto start = std::chrono::high_resolution_clock::now();
+        auto start = std::chrono::high_resolution_clock::now();
+        double y_x = 2 * (fpu_sqr(fpu_cos(x)) - 1);
        
        for (long i = 0; i < 10000; i ++){
             temp = (pow(-1, i) * pow(fpu_mul(2, x), i)) / fpu_factorial(2 * i);
@@ -52,6 +51,7 @@ int main(){
             if( i % 10 == 0){
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<double> elapsed =  end - start;
+                start = end;
 
                 csv << elapsed.count() << "," <<i<<std::endl;
             }

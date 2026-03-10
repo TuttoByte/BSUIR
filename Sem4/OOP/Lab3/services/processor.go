@@ -19,7 +19,7 @@ type OrderProcessor struct {
 	dbManager   *managers.DbManager
 	connManager *managers.ConnectionManager
 	logger      *monitor.CustomLogger
-	calcManager *managers.Calculator
+	calcManager managers.SimpleCalculator
 }
 
 func NewOrderProcessor(logger *monitor.CustomLogger) *OrderProcessor {

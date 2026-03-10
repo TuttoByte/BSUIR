@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="AvaloniaApplication7/App.axaml" value="AvaloniaApplication7/AvaloniaApplication7.csproj" />
+        <entry key="AvaloniaApplication7/MainWindow.axaml" value="AvaloniaApplication7/AvaloniaApplication7.csproj" />
+        <entry key="AvaloniaApplication7/Resources/Colors.axaml" value="AvaloniaApplication7/AvaloniaApplication7.csproj" />
+        <entry key="AvaloniaApplication7/Resources/Icons.axaml" value="AvaloniaApplication7/AvaloniaApplication7.csproj" />
+        <entry key="AvaloniaApplication7/Resources/Styles.axaml" value="AvaloniaApplication7/AvaloniaApplication7.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
