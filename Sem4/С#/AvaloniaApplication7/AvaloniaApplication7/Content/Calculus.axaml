@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AvaloniaApplication7.Content.Calculus">
+             
+    
+    
+     <Border Background="{StaticResource BgColor}">
+                <Grid RowDefinitions="Auto, Auto, Auto" Margin="5">
+                        <Grid Grid.Row="0" RowDefinitions="*,*" Margin="0, 40">
+                                <TextBlock x:Name="MainInput" Grid.Row="0" Text="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                           Foreground="{StaticResource PrColor}" FontSize = "40" FontWeight = "Medium" />
+                                
+                                <TextBlock x:Name="SecondaryInput" Grid.Row="1" Text="0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                           Foreground="Black" FontSize = "22" FontWeight = "Medium"/>
+                        </Grid>
+                        
+                        <WrapPanel Grid.Row="1" MaxWidth="400">
+                                <Button Classes="Mem" Content="MС" Click="OnMemoryClearButtonClick"></Button>
+                                <Button Classes="Mem" Content="MR" Click="OnMemoryRecallButtonClick"></Button>
+                                <Button Classes="Mem" Content="M+" Click="OnMemoryAddButtonClick"></Button>
+                                <Button Classes="Mem" Content="M-" Click="OnMemorySubButtonClick"></Button>
+                                <Button Classes="Mem" Content="MS" Click="OnMemorySetButtonClick"></Button>
+                                <Button Classes="Mem" Content="log(x)"></Button>
+                                
+                                
+                        </WrapPanel>
+                        
+                        <WrapPanel Grid.Row="2" MaxWidth="400">
+                                
+                                <Button Content="%" Tag = "Percent" Foreground="{StaticResource PrColor}" Click="OnUnaryOperatorButtonClick"/>
+                                <Button x:Name="ClearEnty" Content="CE" Foreground="{StaticResource PrColor}" Click="OnClearEntryButtonClick"/>
+                                <Button x:Name = "Clear" Content="C" Foreground="{StaticResource PrColor}" Click="OnClearButtonClick"/>
+                                <Button x:Name = "Erase" Classes="func" Content="{StaticResource BackspaceIcon}"  Foreground="{StaticResource PrColor}" Click="OnEraseButtonClick"/>
+                                
+                                <Button Classes="func" Content="x⁻¹" Tag="Rev"  Foreground="{StaticResource PrColor}" Click="OnUnaryOperatorButtonClick"/>
+                                <Button Classes="func" Content="x²" Tag="Sqr"  Foreground="{StaticResource PrColor}" Click="OnUnaryOperatorButtonClick"/>
+                                <Button Classes="func" Tag="Sqrt" Content="{StaticResource SqrtIcon}"  Foreground="{StaticResource PrColor}" Click="OnUnaryOperatorButtonClick"/>
+                                <Button Tag="Divide" Classes="func" Content="{StaticResource DivideIcon}" Click="OnOperationButtonClick"/>
+                                
+                               
+                                
+                                <Button x:Name="Button7" Tag="7" Content="7" Click="OnNumericButtonClick"/>
+                                <Button x:Name="Button8" Tag="8" Content="8" Click="OnNumericButtonClick"/>
+                                <Button x:Name="Button9" Tag = "9" Content="9" Click="OnNumericButtonClick"/>
+                                <Button Tag="Mul" Classes="func" Content="{StaticResource MultiplyIcon}" Click="OnOperationButtonClick"/>
+                                <Button x:Name="Button4" Tag = "4" Content="4" Click="OnNumericButtonClick"/>
+                                <Button x:Name="Button5" Tag = "5" Content="5" Click="OnNumericButtonClick"/>
+                                <Button x:Name="Button6" Tag = "6" Content="6" Click="OnNumericButtonClick"/>
+                                <Button Classes="func" Tag="Subtract" Content="{StaticResource MinusIcon}" Click="OnOperationButtonClick"/>
+                                <Button x:Name="Button1" Tag = "1" Content="1" Click="OnNumericButtonClick"/>
+                                <Button x:Name="Button2" Tag = "2" Content="2" Click="OnNumericButtonClick"/>
+                                <Button x:Name="Button3" Tag = "3" Content="3" Click="OnNumericButtonClick"/>
+                                <Button Classes="func"  Tag = "Sum" Content="{StaticResource PlusIcon}" Click="OnOperationButtonClick"/>
+                                <Button Content="+/-" Foreground = "{StaticResource PrColor}" Click="OnChangeSignButtonClick"/>
+                                <Button x:Name="Button0" Tag = "0" Content="0" Click="OnNumericButtonClick"/>
+                                <Button Classes="func" Content="." Foreground="{StaticResource PrColor}" Click="OnPointButtonClick"/>
+                                <Button Classes="func" Content="{StaticResource EqualsIcon}" Click="OnResultButtonClick"/>
+                                
+                        </WrapPanel>
+                </Grid>
+        
+        </Border>
+             
+</UserControl>

@@ -1,66 +1,138 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaApplication7.MainWindow"
-        Title="Calcualtor"
-        SizeToContent="WidthAndHeight"
-        Background="Transparent"
-        BorderThickness="0"
-        ExtendClientAreaChromeHints="NoChrome"
-        ExtendClientAreaTitleBarHeightHint="-1"
-        ExtendClientAreaToDecorationsHint="False"
-        SystemDecorations="None"
-        WindowStartupLocation="CenterScreen">
-    
+        Width="410" Height="750"
+        Background="#0f0f0f"
+        CanResize="False"
+        FontFamily="Segoe UI, SF Pro Display, sans-serif">
+
+    <Window.Styles>
+        <Style Selector="Button.nav-item">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="52"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.nav-item:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#274c77"/>
+        </Style>
+        <Style Selector="Button.nav-item.active /template/ ContentPresenter">
+            <Setter Property="Background" Value="#274c77"/>
+        </Style>
         
-        
-        <Border CornerRadius="30" Background="{StaticResource BgColor}">
-                <Grid RowDefinitions="Auto, Auto" Margin="5">
-                        <Grid Grid.Row="0" RowDefinitions="*,*" Margin="0, 40">
-                                <TextBlock Grid.Row="0" Text="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                                           Foreground="{StaticResource PrColor}" FontSize = "40" FontWeight = "Medium"/>
-                                
-                                <TextBlock Grid.Row="1" Text="0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                                           Foreground="Black" FontSize = "22" FontWeight = "Medium"/>
-                        </Grid>
-                        
-                        <WrapPanel Grid.Row="1" MaxWidth="400">
-                                
-                                <Button Content="%" Foreground="{StaticResource PrColor}"/>
-                                <Button Content="CE" Foreground="{StaticResource PrColor}"/>
-                                <Button Content="C" Foreground="{StaticResource PrColor}"/>
-                                <Button Classes="func" Content="{StaticResource BackspaceIcon}"  Foreground="{StaticResource PrColor}"/>
-                                
-                                <Button Classes="func" Content="x⁻¹"  Foreground="{StaticResource PrColor}"/>
-                                <Button Classes="func" Content="x²"  Foreground="{StaticResource PrColor}"/>
-                                <Button Classes="func" Content="{StaticResource SqrtIcon}"  Foreground="{StaticResource PrColor}"/>
-                                <Button Classes="func" Content="{StaticResource DivideIcon}"/>
-                                
-                               
-                                
-                                <Button x:Name="Button7" Tag="7" Content="7" Click="OnNumericButtonClick"/>
-                                <Button x:Name="Button8" Tag="8" Content="8"/>
-                                <Button x:Name="Button9" Tag = "9" Content="9"/>
-                                <Button Classes="func" Content="{StaticResource MultiplyIcon}"/>
-                                <Button x:Name="Button4" Tag = "4" Content="4"/>
-                                <Button x:Name="Button5" Tag = "5" Content="5"/>
-                                <Button x:Name="Button6" Tag = "6" Content="6"/>
-                                <Button Classes="func" Content="{StaticResource MinusIcon}"/>
-                                <Button x:Name="Button1" Tag = "1" Content="1"/>
-                                <Button x:Name="Button2" Tag = "2" Content="2"/>
-                                <Button x:Name="Button3" Tag = "3" Content="3"/>
-                                <Button Classes="func"  Tag = "Sum" Content="{StaticResource PlusIcon}" Click="OnOperationButtonClick"/>
-                                <Button Content="+/-" Foreground = "{StaticResource PrColor}"/>
-                                <Button x:Name="Button0" Tag = "9" Content="0"/>
-                                <Button Classes="func" Content="." Foreground="{StaticResource PrColor}"/>
-                                <Button Classes="func" Content="{StaticResource EqualsIcon}" Click="OnResultButtonClick"/>
-                                
-                        </WrapPanel>
+        <Style Selector="Button.toggle-btn">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.toggle-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#274c77"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid>
+        <Grid RowDefinitions="Auto,*">
+      
+            <Border Grid.Row="0"
+                    Height="48"
+                    Background="#e7ecef"
+                    BorderBrush="#6096ba"
+                    BorderThickness="0,0,0,1"
+                    Padding="12,0">
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Spacing="10">
+                    <Button Classes="toggle-btn"
+                            Click="ToggleSidebar_Click">
+                        <TextBlock Text="☰"
+                                   Foreground="#555"
+                                   FontSize="16"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Button>
+                    <TextBlock x:Name="PageTitle"
+                               Text="Calculator"
+                               Foreground="#333"
+                               FontSize="13"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+  
+            <ContentControl x:Name="MainContent" Grid.Row="1"/>
+        </Grid>
+
+  
+        <Border x:Name="OverlayBackground"
+                Background="#80000000"
+                IsVisible="False"
+                Opacity="0"
+                PointerPressed="ToggleSidebar_Click"/>
+
+     
+        <Border x:Name="Sidebar"
+                Width="240"
+                Background="#6096ba"
+                HorizontalAlignment="Left"
+                RenderTransformOrigin="0,0">
+            <Border.RenderTransform>
+                <TranslateTransform X="-240"/>
+            </Border.RenderTransform>
+
+            <DockPanel Width="240">
+                <Grid DockPanel.Dock="Top"
+                      ColumnDefinitions="*,Auto"
+                      Margin="20,22,12,18">
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="Calculator"
+                                   Foreground="#ffffff"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <Button Grid.Column="1"
+                            Classes="toggle-btn"
+                            Click="ToggleSidebar_Click">
+                        <TextBlock Text="←"
+                                   Foreground="#ffffff"
+                                   FontSize="14"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Button>
                 </Grid>
-        
+
+                <Border DockPanel.Dock="Top"
+                        Height="1" Background="#ffffff"
+                        Margin="16,0,16,14"/>
+                
+                <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="10,0">
+                    <Button x:Name="ButtonCalculus" Classes="nav-item active"
+                            Click="ShowCalculus"
+                            Width="200">
+                        <TextBlock Text="Calculator"
+                                   Foreground="#e8e8e8"
+                                   FontSize="13"
+                                   FontWeight="Medium"/>
+                    </Button>
+
+                    <Button x:Name="ButtonMain" Classes="nav-item"
+                            Click="ShowMain"
+                            Width="200">
+                        <TextBlock Text="Main"
+                                   Foreground="#e8e8e8"
+                                   FontSize="13"
+                                   FontWeight="Medium"/>
+                    </Button>
+                </StackPanel>
+            </DockPanel>
         </Border>
-        
-        
+    </Grid>
 </Window>

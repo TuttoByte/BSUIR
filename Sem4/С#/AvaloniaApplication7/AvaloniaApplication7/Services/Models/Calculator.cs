@@ -17,10 +17,22 @@ public class Calculator : ICalculator
             _operations[op.GetType().Name] = op;
         }
     }
+
+    public IOperation GetOperation(string name)
+    {
+        return _operations[name];
+    }
     
     public double Calculate(double a, double b)
     {
         _result = GetCurrentOperation().Proceed(a, b);
+        _previousResult = _result;
+        return _result;
+    }
+
+    public double Calculate(double a)
+    {
+        _result = GetCurrentOperation().Proceed(a, 0);
         _previousResult = _result;
         return _result;
     }
@@ -44,6 +56,13 @@ public class Calculator : ICalculator
     {
         _currentOperation = _operations[name];
     }
+
+    public double ChangeSign(double value)
+    {
+        return value * -1;
+    }
+    
+    
 
 }
 

@@ -1,44 +1,67 @@
-using System;
-using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using AvaloniaApplication7.Services.Models;
+using Avalonia.Media;
+using AvaloniaApplication7.Content;
 
-namespace AvaloniaApplication7;
-
-public partial class MainWindow : Window
+namespace AvaloniaApplication7
 {
-    private Tasker _tasker;
-    
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
-        _tasker = new Tasker();
-    }
-
-    
-    public void OnNumericButtonClick(object? sender, RoutedEventArgs e)
-    {
-        var button = sender as Button;
+        private bool _sidebarOpen = false;
+        private TranslateTransform _menuTransform;
         
-        Console.WriteLine(button!.Name);
+        Calculus _calculus;
+        MainPage _main;
 
-        _tasker.SetOperand(double.Parse(button.Tag!.ToString()!));
-    }
+        public MainWindow()
+        {
+            InitializeComponent();
+            
+            _menuTransform = Sidebar.RenderTransform as TranslateTransform;
+            _calculus = new Calculus();
+            _main = new MainPage();
+            MainContent.Content = _main;
+            ButtonCalculus.Classes.Remove("active");
+            ButtonMain.Classes.Add("active");
+        }
 
-    public void OnOperationButtonClick(object? sender, RoutedEventArgs e)
-    {
-        var button = sender as Button;
-        
-        Console.WriteLine(button!.Name);
-        _tasker.SetOperation(button.Tag!.ToString()!);
-    }
+        private void ToggleSidebar_Click(object? sender, RoutedEventArgs e)
+        {
+            if (_sidebarOpen)
+            {
+         
+                _menuTransform.X = -Sidebar.Width;
+                OverlayBackground.IsVisible = false;
+                OverlayBackground.Opacity = 0;
+            }
+            else
+            {
+                // Открыть меню
+                _menuTransform.X = 0;
+                OverlayBackground.IsVisible = true;
+                OverlayBackground.Opacity = 1;
+            }
 
-    public void OnResultButtonClick(object? sender, RoutedEventArgs e)
-    {
-        var button = sender as Button;
-        
-        Console.WriteLine(button!.Name);
-        Console.WriteLine(_tasker.Perform());
+            _sidebarOpen = !_sidebarOpen;
+        }
+
+        private void ShowCalculus(object? sender, RoutedEventArgs e)
+        {
+            PageTitle.Text = "Calculator";
+            ButtonCalculus.Classes.Add("active");
+            ButtonMain.Classes.Remove("active");
+            MainContent.Content = _calculus;
+            ToggleSidebar_Click(sender, e);
+       
+        }
+
+        private void ShowMain(object? sender, RoutedEventArgs e)
+        {
+            PageTitle.Text = "Main";
+            ButtonCalculus.Classes.Remove("active");
+            ButtonMain.Classes.Add("active");
+            MainContent.Content = _main;
+            ToggleSidebar_Click(sender, e);
+        }
     }
 }
