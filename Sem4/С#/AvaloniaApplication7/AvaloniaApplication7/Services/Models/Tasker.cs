@@ -26,7 +26,7 @@ public class Tasker
         
     private TaskerState _state = TaskerState.WaitingForFirst;
     
-    private readonly Calculator _calculator = new Calculator([new Sum(), new Subtract(),new Divide(), new Mul(), new Sqrt(), new Rev(), new Sqr(), new Percent()]);
+    private readonly Calculator _calculator = new Calculator([new Sum(), new Subtract(),new Divide(), new Mul(), new Sqrt(), new Rev(), new Sqr(), new Percent(), new Log()]);
     private readonly IOperand[] _operands = { new Operand(), new Operand() };
     
 

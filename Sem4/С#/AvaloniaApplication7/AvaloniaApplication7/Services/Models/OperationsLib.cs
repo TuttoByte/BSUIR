@@ -118,3 +118,17 @@ public class Percent : IOperation
         return "percent";
     }
 }
+
+
+public class Log : IOperation
+{
+    public double Proceed(double value1, double value2)
+    {
+        return Math.Log(value1);
+    }
+
+    public string Signature()
+    {
+        return "log";
+    }
+}

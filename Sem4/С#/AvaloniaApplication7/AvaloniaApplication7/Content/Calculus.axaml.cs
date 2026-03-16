@@ -114,4 +114,5 @@ public partial class Calculus : UserControl
         _memory.MemoryClear();
     }
     
+    
 }

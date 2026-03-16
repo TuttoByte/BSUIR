@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using System;
-
 namespace AvaloniaApplication7;
 
 class Program

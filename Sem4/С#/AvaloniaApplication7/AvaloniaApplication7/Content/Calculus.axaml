@@ -20,7 +20,7 @@
                                 <Button Classes="Mem" Content="M+" Click="OnMemoryAddButtonClick"></Button>
                                 <Button Classes="Mem" Content="M-" Click="OnMemorySubButtonClick"></Button>
                                 <Button Classes="Mem" Content="MS" Click="OnMemorySetButtonClick"></Button>
-                                <Button Classes="Mem" Content="log(x)"></Button>
+                                <Button Classes="Mem" Tag="Log" Content="log(x)" Click="OnUnaryOperatorButtonClick"></Button>
                                 
                                 
                         </WrapPanel>
