@@ -1,13 +1,14 @@
 package controllers
 
 import (
-	"Lab4/services/contracts"
-	"Lab4/services/factories"
+	cargo2 "Lab4/services/models/cargo"
+	"Lab4/services/models/transport"
 )
 
 type DeliveryInfo struct {
 	TransportType string
-	distance      float64
+	Inner         string
+	Distance      float64
 }
 
 type CargoInfo struct {
@@ -20,8 +21,8 @@ type DeliverController struct {
 	info   DeliveryInfo
 }
 
-func (d *DeliverController) NewDeliveryController() DeliverController {
-	return DeliverController{
+func NewDeliveryController() *DeliverController {
+	return &DeliverController{
 		cargos: make([]CargoInfo, 0),
 	}
 }
@@ -38,19 +39,19 @@ func (d *DeliverController) GetDeliveyResult() (float64, float64, error) {
 	sum := 0.0
 
 	for _, cargo := range d.cargos {
-		cargoType, err := factories.GetCargo(cargo.Type)
+		cargoType, err := cargo2.GetCargo(cargo.Type)
 		if err != nil {
 			return 0, 0, err
 		}
 		sum += (float64(cargo.Amount) * cargoType.GetMass()) / cargoType.GetCost()
 	}
 
-	deliveryType, err := contracts.GetCargoFactory(d.info.TransportType, "")
+	deliveryType, err := transport.GetCargoFactory(d.info.TransportType, d.info.Inner)
 	if err != nil {
 		return 0, 0, err
 	}
 
-	total := sum + deliveryType.GetPetrolium()*d.info.distance
-	time := d.info.distance / deliveryType.GetSpeed()
+	total := sum + deliveryType.GetPetrolium()*d.info.Distance
+	time := d.info.Distance / deliveryType.GetSpeed()
 	return total, time, nil
 }

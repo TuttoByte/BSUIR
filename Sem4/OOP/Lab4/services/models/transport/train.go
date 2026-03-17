@@ -6,6 +6,14 @@ type Train struct {
 	Stops      int
 }
 
+func NewTrain() *Train {
+	return &Train{
+		100,
+		120,
+		1000,
+	}
+}
+
 func (t *Train) GetSpeed() float64 {
 	return t.MaxSpeed
 }
