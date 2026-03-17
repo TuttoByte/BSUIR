@@ -1,4 +1,4 @@
-package Transport
+package transport
 
 type Train struct {
 	MaxSpeed   float64

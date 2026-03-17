@@ -2,16 +2,16 @@ package factories
 
 import (
 	"Lab4/services/contracts"
-	"Lab4/services/models/Transport"
+	"Lab4/services/models/transport"
 	"errors"
 )
 
 func GetAirTransport(atype string) (contracts.AirTransport, error) {
 	switch atype {
 	case "helicopter":
-		return &Transport.Helicopter{}, nil
+		return &transport.Helicopter{}, nil
 	case "plane":
-		return &Transport.Plane{}, nil
+		return &transport.Plane{}, nil
 	}
 	return nil, errors.New("invalid air transport")
 }
@@ -19,7 +19,7 @@ func GetAirTransport(atype string) (contracts.AirTransport, error) {
 func GetWaterTransport(atype string) (contracts.WaterTransport, error) {
 	switch atype {
 	case "tanker":
-		return &Transport.Tanker{}, nil
+		return &transport.Tanker{}, nil
 	}
 
 	return nil, errors.New("invalid whater transport")
@@ -28,9 +28,9 @@ func GetWaterTransport(atype string) (contracts.WaterTransport, error) {
 func GetGroundTransport(atype string) (contracts.GroundTransport, error) {
 	switch atype {
 	case "train":
-		return &Transport.Train{}, nil
+		return &transport.Train{}, nil
 	case "truck":
-		return &Transport.Truck{}, nil
+		return &transport.Truck{}, nil
 	}
 	return nil, errors.New("invalid ground transport")
 }
