@@ -63,6 +63,7 @@ func (s *Server) Show() {
 	total, time, err := s.dcontrol.GetDeliveyResult()
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 
 	fmt.Println("Total delivery cost: ", total)

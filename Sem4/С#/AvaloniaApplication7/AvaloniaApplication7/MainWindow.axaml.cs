@@ -12,6 +12,7 @@ namespace AvaloniaApplication7
         
         Calculus _calculus;
         MainPage _main;
+        CustomProgressBar _progressBar;
 
         public MainWindow()
         {
@@ -20,9 +21,12 @@ namespace AvaloniaApplication7
             _menuTransform = Sidebar.RenderTransform as TranslateTransform;
             _calculus = new Calculus();
             _main = new MainPage();
-            MainContent.Content = _main;
+            _progressBar = new CustomProgressBar();
+            MainContent.Content = _progressBar;
             ButtonCalculus.Classes.Remove("active");
-            ButtonMain.Classes.Add("active");
+            ButtonMain.Classes.Remove("active");
+            ProgressBar.Classes.Add("active");
+            
         }
 
         private void ToggleSidebar_Click(object? sender, RoutedEventArgs e)
@@ -50,6 +54,7 @@ namespace AvaloniaApplication7
             PageTitle.Text = "Calculator";
             ButtonCalculus.Classes.Add("active");
             ButtonMain.Classes.Remove("active");
+            ProgressBar.Classes.Remove("active");
             MainContent.Content = _calculus;
             ToggleSidebar_Click(sender, e);
        
@@ -60,8 +65,20 @@ namespace AvaloniaApplication7
             PageTitle.Text = "Main";
             ButtonCalculus.Classes.Remove("active");
             ButtonMain.Classes.Add("active");
+            ProgressBar.Classes.Remove("active");
             MainContent.Content = _main;
             ToggleSidebar_Click(sender, e);
+        }
+
+        public void ShowProgressBar(object? sender, RoutedEventArgs e)
+        {
+            PageTitle.Text = "ProgressBar";
+            ButtonCalculus.Classes.Remove("active");
+            ButtonMain.Classes.Remove("active");
+            ProgressBar.Classes.Add("active");
+            MainContent.Content =  _progressBar;
+            ToggleSidebar_Click(sender, e);
+            
         }
     }
 }

@@ -131,6 +131,16 @@
                                    FontSize="13"
                                    FontWeight="Medium"/>
                     </Button>
+                    
+                    
+                    <Button x:Name="ProgressBar" Classes="nav-item"
+                            Width="200"
+                            Click="ShowProgressBar">
+                        <TextBlock Text="ProgressBar"
+                                   Foreground="#e8e8e8"
+                                   FontSize="13"
+                                   FontWeight="Medium"/>
+                    </Button>
                 </StackPanel>
             </DockPanel>
         </Border>
