@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices.JavaScript;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using AvaloniaApplication7.Services.classes;
 using AvaloniaApplication7.Services.Models;
 
@@ -35,11 +37,15 @@ public partial class CustomProgressBar : UserControl
     {
         InitializeComponent();
         DataContext = this;
+        Stop.IsEnabled =  false;
     }
 
 
     public void OnButtonStartClicked(object sender, RoutedEventArgs e)
     {
+        Status.Text = "Вычисление";
+        Start.IsEnabled = false;
+        Stop.IsEnabled = true;
         cancelTokenSource.Dispose();
         cancelTokenSource =  new CancellationTokenSource();
         token = cancelTokenSource.Token;
@@ -52,8 +58,19 @@ public partial class CustomProgressBar : UserControl
         });
         Task.Run(() =>
         {
-            IntegralData.Calculate(Functions.Sin, 0, 1, MaxValue, progress, token);
+            var result = IntegralData.Calculate(Functions.Sin, 0, 1, MaxValue, progress, token);
+
+            if (!cancelTokenSource.IsCancellationRequested)
+            {
+                Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    Status.Text = $"Итог вычисления: \n {result.ToString("F3", CultureInfo.InvariantCulture)}";
+                });
+            }
+            
+
         }, token);
+        
     }
 
     
@@ -61,6 +78,9 @@ public partial class CustomProgressBar : UserControl
     
     public void OnButtonStopClicked(object sender, RoutedEventArgs e)
     {
+        Status.Text = "Задание отменено";
+        Start.IsEnabled = true;
+        Stop.IsEnabled = false;
         cancelTokenSource.Cancel();
         IntegralData.Reset();
     }

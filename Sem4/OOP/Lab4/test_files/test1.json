@@ -1,0 +1,12 @@
+{
+  "batches" : [
+    {
+      "cargo_nummber": "12",
+      "cargo_type": "cloth",
+      "delivery_distance" : "1111.11",
+      "transport_type" : "air",
+      "transport_instance" : "plane"
+    }
+
+  ]
+}
