@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -13,20 +14,25 @@ namespace AvaloniaApplication7
         Calculus _calculus;
         MainPage _main;
         CustomProgressBar _progressBar;
+        Picker _picker;
 
         public MainWindow()
         {
             InitializeComponent();
             
+            
+            
             _menuTransform = Sidebar.RenderTransform as TranslateTransform;
             _calculus = new Calculus();
             _main = new MainPage();
             _progressBar = new CustomProgressBar();
+            _picker = new Picker();
             MainContent.Content = _progressBar;
             ButtonCalculus.Classes.Remove("active");
             ButtonMain.Classes.Remove("active");
             ProgressBar.Classes.Add("active");
-            
+            Picker.Classes.Remove("active");
+
         }
 
         private void ToggleSidebar_Click(object? sender, RoutedEventArgs e)
@@ -55,6 +61,7 @@ namespace AvaloniaApplication7
             ButtonCalculus.Classes.Add("active");
             ButtonMain.Classes.Remove("active");
             ProgressBar.Classes.Remove("active");
+            Picker.Classes.Remove("active");
             MainContent.Content = _calculus;
             ToggleSidebar_Click(sender, e);
        
@@ -66,6 +73,7 @@ namespace AvaloniaApplication7
             ButtonCalculus.Classes.Remove("active");
             ButtonMain.Classes.Add("active");
             ProgressBar.Classes.Remove("active");
+            Picker.Classes.Remove("active");
             MainContent.Content = _main;
             ToggleSidebar_Click(sender, e);
         }
@@ -75,10 +83,22 @@ namespace AvaloniaApplication7
             PageTitle.Text = "ProgressBar";
             ButtonCalculus.Classes.Remove("active");
             ButtonMain.Classes.Remove("active");
+            Picker.Classes.Remove("active");
             ProgressBar.Classes.Add("active");
             MainContent.Content =  _progressBar;
             ToggleSidebar_Click(sender, e);
             
+        }
+
+        public void ShowPicker(object? sender, RoutedEventArgs e)
+        {
+            PageTitle.Text = "Picker";
+            ButtonCalculus.Classes.Remove("active");
+            ButtonMain.Classes.Remove("active");
+            ProgressBar.Classes.Remove("active");
+            Picker.Classes.Add("active");
+            MainContent.Content =  _picker;
+            ToggleSidebar_Click(sender, e);
         }
     }
 }

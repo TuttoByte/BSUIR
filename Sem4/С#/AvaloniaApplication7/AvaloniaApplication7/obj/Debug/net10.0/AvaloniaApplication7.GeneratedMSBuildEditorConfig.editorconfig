@@ -32,6 +32,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/udainoko/Documents/BSUIR/Sem4/С\#/AvaloniaApplication7/AvaloniaApplication7/Content/MainPage.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/udainoko/Documents/BSUIR/Sem4/С\#/AvaloniaApplication7/AvaloniaApplication7/Content/Picker.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/udainoko/Documents/BSUIR/Sem4/С\#/AvaloniaApplication7/AvaloniaApplication7/Content/ProgressBar.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 

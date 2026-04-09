@@ -141,6 +141,15 @@
                                    FontSize="13"
                                    FontWeight="Medium"/>
                     </Button>
+                    
+                    <Button x:Name="Picker" Classes="nav-item"
+                            Width="200"
+                            Click="ShowPicker">
+                        <TextBlock Text="Picker"
+                                   Foreground="#e8e8e8"
+                                   FontSize="13"
+                                   FontWeight="Medium"/>
+                    </Button>
                 </StackPanel>
             </DockPanel>
         </Border>

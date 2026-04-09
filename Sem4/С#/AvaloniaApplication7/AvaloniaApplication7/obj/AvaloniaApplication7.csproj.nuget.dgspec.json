@@ -64,6 +64,22 @@
             "Avalonia.Themes.Fluent": {
               "target": "Package",
               "version": "[11.3.12, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[11.0.0-preview.2.26159.112, )"
+            },
+            "RandomFriendlyNameGenerator": {
+              "target": "Package",
+              "version": "[1.0.9, )"
+            },
+            "ReactiveUI": {
+              "target": "Package",
+              "version": "[23.1.8, )"
+            },
+            "sqlite-net-pcl": {
+              "target": "Package",
+              "version": "[1.10.196-beta, )"
             }
           },
           "imports": [

@@ -17,5 +17,9 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.2.26159.112" />
+        <PackageReference Include="RandomFriendlyNameGenerator" Version="1.0.9" />
+        <PackageReference Include="ReactiveUI" Version="23.1.8" />
+        <PackageReference Include="sqlite-net-pcl" Version="1.10.196-beta" />
     </ItemGroup>
 </Project>
