@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestOpenWetherClient(t *testing.T) {
+func TestOpenWetherClient_Standart(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		assert.Equal(t, "/weather?lat=55.7558&lon=37.6173&appid=testkey&units=metric", r.URL.String())
@@ -30,10 +30,15 @@ func TestOpenWetherClient(t *testing.T) {
 	assert.Equal(t, temp, decimal.NewFromFloat(20.5))
 }
 
+func TestNewOpenWeatherClient_Api(t *testing.T) {
+
+}
+
 func TestGoogleWetherClient(t *testing.T) {
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "/currentConditions:lookup?key=testkey&location.latitude=55.7558&location.longitude=37.6173", r.URL.String())
+		assert.Equal(t,
+			"/currentConditions:lookup?key=testkey&location.latitude=55.7558&location.longitude=37.6173", r.URL.String())
 
 		resp := googleWeatherResponse{
 			Temperature: struct {
@@ -46,5 +51,5 @@ func TestGoogleWetherClient(t *testing.T) {
 	cli := NewGoogleWetherClient("testkey", ts.URL+"/currentConditions")
 	temp, err := cli.LocationCurrentTemperature(decimal.NewFromFloat(55.7558), decimal.NewFromFloat(37.6173))
 	require.NoError(t, err)
-	assert.Equal(t, temp, decimal.NewFromFloat(20.5))
+	assert.Equal(t, decimal.NewFromFloat(20.5), temp)
 }
