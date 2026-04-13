@@ -1,9 +1,8 @@
 package main
 
 import (
-	"api"
-	_ "api/docs"
 	"log"
+	"main/api"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -21,7 +20,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	currentWeatherHandler := api.NewCurrentWeatherHandler()
+	currentWeatherHandler := api.NewCurrentWeatherHandler("open")
 
 	r := gin.Default()
 

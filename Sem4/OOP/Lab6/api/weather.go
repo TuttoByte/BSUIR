@@ -12,12 +12,27 @@ import (
 )
 
 type WeatherHandler struct {
-	Controller controllers.CurrentWeatherController[*clients.OpenWeatherClient]
+	Controller controllers.CurrentWeatherController
 }
 
-func NewCurrentWeatherHandler() *WeatherHandler {
+func NewCurrentWeatherHandler(wtype string) *WeatherHandler {
+	switch wtype {
+	case "open":
+		return NewOpenWeatherHandler()
+	case "google":
+		return NewGoogleWeatherHandler()
+	}
+	return nil
+}
+
+func NewOpenWeatherHandler() *WeatherHandler {
 	return &WeatherHandler{Controller: *controllers.NewCurrentWeatherController(
 		clients.NewOpenWeatherClient(utils.GetEnv("OPENWEATHER_API_KEY", ""), utils.GetEnv("OPENWEATHER_BASE_URL", "")))}
+}
+
+func NewGoogleWeatherHandler() *WeatherHandler {
+	return &WeatherHandler{Controller: *controllers.NewCurrentWeatherController(
+		clients.NewGoogleWetherClient(utils.GetEnv("OPENWEATHER_API_KEY", ""), utils.GetEnv("OPENWEATHER_BASE_URL", "")))}
 }
 
 // GetCurrentWeather godoc

@@ -1,23 +1,22 @@
 package controllers
 
 import (
-	"clients"
-	weather "models/weather"
-
 	"github.com/shopspring/decimal"
+	"main/clients"
+	"main/models/weather"
 )
 
-type CurrentWeatherController[T clients.WeatherDataClient] struct {
-	Client T
+type CurrentWeatherController struct {
+	Client clients.WeatherDataClient
 }
 
-func NewCurrentWeatherController[T clients.WeatherDataClient](client T) *CurrentWeatherController[T] {
-	return &CurrentWeatherController[T]{
+func NewCurrentWeatherController(client clients.WeatherDataClient) *CurrentWeatherController {
+	return &CurrentWeatherController{
 		Client: client,
 	}
 }
 
-func (c *CurrentWeatherController[T]) GetCurrentWeather(lat decimal.Decimal, lon decimal.Decimal) (weather.CurrentWeather, error) {
+func (c *CurrentWeatherController) GetCurrentWeather(lat decimal.Decimal, lon decimal.Decimal) (weather.CurrentWeather, error) {
 
 	temperature, err := c.Client.LocationCurrentTemperature(lat, lon)
 	if err != nil {
