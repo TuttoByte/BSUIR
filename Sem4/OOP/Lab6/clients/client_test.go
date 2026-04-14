@@ -30,10 +30,6 @@ func TestOpenWetherClient_Standart(t *testing.T) {
 	assert.Equal(t, temp, decimal.NewFromFloat(20.5))
 }
 
-func TestNewOpenWeatherClient_Api(t *testing.T) {
-
-}
-
 func TestGoogleWetherClient(t *testing.T) {
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -75,5 +71,50 @@ func TestOpenWeatherClient_Coordinates(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, decimal.NewFromFloat(51.5073219), lat)
 	assert.Equal(t, decimal.NewFromFloat(-0.1276474), lan)
+}
 
+func TestGoogleWeatherClient_Forecast(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t,
+			"/v1/currentConditions:lookup?key=testkey&location.latitude=55.7558&location.longitude=37.6173", r.URL.String())
+
+		resp := googleForecastResponse{
+			Temperature: struct {
+				Degrees decimal.Decimal `json:"degrees"`
+				Unit    string          `json:"unit"`
+			}{Degrees: decimal.NewFromFloat(12.2), Unit: "CELSIUS"},
+		}
+
+		json.NewEncoder(w).Encode(resp)
+	}))
+
+	cli := NewGoogleWetherClient("testkey", ts.URL)
+	temp, err := cli.LocationCurrentForcast(decimal.NewFromFloat(55.7558), decimal.NewFromFloat(37.6173))
+	require.NoError(t, err)
+	assert.Equal(t, decimal.NewFromFloat(12.2), temp.Temperature)
+}
+
+func TestOpenWeatherClient_Forecast(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t,
+			"/v1/currentConditions:lookup?key=testkey&location.latitude=55.7558&location.longitude=37.6173", r.URL.String())
+
+		resp := openForecastResponce{Main: struct {
+			Temp      decimal.Decimal `json:"temp"`
+			FeelsLike decimal.Decimal `json:"feels_like"`
+			TempMin   decimal.Decimal `json:"temp_min"`
+			TempMax   decimal.Decimal `json:"temp_max"`
+			Pressure  decimal.Decimal `json:"pressure"`
+			Humidity  int             `json:"humidity"`
+			SeaLevel  int             `json:"sea_level"`
+			GrndLevel int             `json:"grnd_level"`
+		}{Temp: decimal.NewFromFloat(12.12), FeelsLike: decimal.NewFromFloat(12.12), TempMin: decimal.NewFromFloat(9.12), TempMax: decimal.NewFromFloat(20.12), Pressure: decimal.NewFromFloat(12.12), Humidity: 13, SeaLevel: 123, GrndLevel: 13}}
+
+		json.NewEncoder(w).Encode(resp)
+	}))
+
+	cli := NewOpenWeatherClient("testkey", ts.URL)
+	temp, err := cli.LocationCurrentForcast(decimal.NewFromFloat(55.7558), decimal.NewFromFloat(37.6173))
+	require.NoError(t, err)
+	assert.Equal(t, decimal.NewFromFloat(12.2), temp.Temperature)
 }
