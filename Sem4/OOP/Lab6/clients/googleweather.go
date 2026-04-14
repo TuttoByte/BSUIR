@@ -28,8 +28,8 @@ func NewGoogleWetherClient(apiKey string, baseURL string) *GoogleWeatherClient {
 
 func (g *GoogleWeatherClient) LocationCurrentTemperature(lat decimal.Decimal, lon decimal.Decimal) (temperature decimal.Decimal, err error) {
 
-	url := fmt.Sprintf("/v1/currentConditions:lookup?key=%s&location.latitude=%s&location.longitude=-%s",
-		g.apiKey, lat.String(), lon.String())
+	url := fmt.Sprintf("%s/v1/currentConditions:lookup?key=%s&location.latitude=%s&location.longitude=%s",
+		g.baseURL, g.apiKey, lat.String(), lon.String())
 
 	resp, err := http.Get(url)
 	if err != nil {

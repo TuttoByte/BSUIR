@@ -38,7 +38,7 @@ func TestGoogleWetherClient(t *testing.T) {
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t,
-			"/currentConditions:lookup?key=testkey&location.latitude=55.7558&location.longitude=37.6173", r.URL.String())
+			"/v1/currentConditions:lookup?key=testkey&location.latitude=55.7558&location.longitude=37.6173", r.URL.String())
 
 		resp := googleWeatherResponse{
 			Temperature: struct {
@@ -48,7 +48,7 @@ func TestGoogleWetherClient(t *testing.T) {
 		json.NewEncoder(w).Encode(resp)
 	}))
 
-	cli := NewGoogleWetherClient("testkey", ts.URL+"/currentConditions")
+	cli := NewGoogleWetherClient("testkey", ts.URL)
 	temp, err := cli.LocationCurrentTemperature(decimal.NewFromFloat(55.7558), decimal.NewFromFloat(37.6173))
 	require.NoError(t, err)
 	assert.Equal(t, decimal.NewFromFloat(20.5), temp)
@@ -56,7 +56,7 @@ func TestGoogleWetherClient(t *testing.T) {
 
 func TestOpenWeatherClient_Coordinates(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "/geo/1.0/direct?q=London,&limit=1&appid=testkey", r.URL.String())
+		assert.Equal(t, "/geo/1.0/direct?q=London&limit=5&appid=testkey", r.URL.String())
 
 		resp := newOpenWeatherCoordResponce([]openWeatherCityInfo{
 			{
@@ -70,7 +70,7 @@ func TestOpenWeatherClient_Coordinates(t *testing.T) {
 		json.NewEncoder(w).Encode(resp)
 	}))
 
-	cli := NewOpenWeatherCoords("testkey", ts.URL+"/geo/1.0/direct")
+	cli := NewOpenWeatherCoords("testkey", ts.URL)
 	lat, lan, err := cli.GetCurrentLocation("London")
 	assert.Nil(t, err)
 	assert.Equal(t, decimal.NewFromFloat(51.5073219), lat)
