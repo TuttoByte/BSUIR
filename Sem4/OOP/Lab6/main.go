@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"main/api"
+	"main/cmd"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -21,7 +22,9 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	currentWeatherHandler := api.NewCurrentWeatherHandler("open")
+	wtype := cmd.WeatherTypeValidate()
+
+	currentWeatherHandler := api.NewCurrentWeatherHandler(wtype)
 	currentLocationHandler := api.NewOpenWeatherCoordinatesHandler()
 
 	r := gin.Default()
@@ -29,8 +32,12 @@ func main() {
 	v1 := r.Group("/api/v1")
 	{
 		v1.GET("/weather", currentWeatherHandler.HandleGetCurrentWeather)
-		v1.GET("/forecast", currentWeatherHandler.HandleGetCurrentForecast)
 		v1.POST("/weather", currentWeatherHandler.HandleGetMultipleCurrentWeather)
+		v1.GET("/weather/city", currentWeatherHandler.HandleGetCurrentWeatherByCity(&currentLocationHandler.Controller))
+
+		v1.GET("/forecast", currentWeatherHandler.HandleGetCurrentForecast)
+		v1.GET("/forecast/city", currentWeatherHandler.HandleGetCurrentForecastByCity(&currentLocationHandler.Controller))
+
 		v1.GET("/location", currentLocationHandler.HandleGetCurrentCityCoord)
 	}
 

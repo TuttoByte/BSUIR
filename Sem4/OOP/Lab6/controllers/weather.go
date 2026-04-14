@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"github.com/shopspring/decimal"
 	"main/clients"
 	"main/models/weather"
@@ -49,4 +50,31 @@ func (c *CurrentWeatherController) GetMultipleWeather(weathers []weather.Current
 		data[i].Temperature = temp
 	}
 	return data, nil
+}
+
+func (c *CurrentWeatherController) GetCurrentCityWeather(cityName string, country string, control *CurrentLocationController) (weather.CurrentWeather, error) {
+
+	cities, err := control.GetCurentLocation(cityName)
+	if err != nil {
+		return weather.CurrentWeather{}, err
+	}
+	for _, city := range cities {
+		if city.Country == country {
+			return c.GetCurrentWeather(city.Lat, city.Lon)
+		}
+	}
+	return weather.CurrentWeather{}, errors.New("city not found or country not found")
+}
+
+func (c *CurrentWeatherController) GetCurrentCityForecast(cityName string, country string, control *CurrentLocationController) (clients.ForecastResponse, error) {
+	cities, err := control.GetCurentLocation(cityName)
+	if err != nil {
+		return clients.ForecastResponse{}, err
+	}
+	for _, city := range cities {
+		if city.Country == country {
+			return c.GetCurrentForecast(city.Lat, city.Lon)
+		}
+	}
+	return clients.ForecastResponse{}, errors.New("city not found or country not found")
 }

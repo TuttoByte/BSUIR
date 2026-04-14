@@ -144,6 +144,42 @@ paths:
       summary: Get Current Forecast
       tags:
       - forecast
+  /forecast/city:
+    get:
+      consumes:
+      - application/json
+      description: Returns current forecast for a given city and country
+      parameters:
+      - description: City name
+        example: London
+        in: query
+        name: city
+        required: true
+        type: string
+      - description: Country code
+        example: UK
+        in: query
+        name: country
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse-clients_ForecastResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      summary: Get current forecast by city
+      tags:
+      - forecast
   /location:
     get:
       consumes:
@@ -233,6 +269,42 @@ paths:
           schema:
             $ref: '#/definitions/responses.StatusResponse'
       summary: Get multiple current weather
+      tags:
+      - weather
+  /weather/city:
+    get:
+      consumes:
+      - application/json
+      description: Returns current weather for a given city and country
+      parameters:
+      - description: City name
+        example: London
+        in: query
+        name: city
+        required: true
+        type: string
+      - description: Country code
+        example: UK
+        in: query
+        name: country
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse-weather_CurrentWeather'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      summary: Get current weather by city
       tags:
       - weather
 swagger: "2.0"

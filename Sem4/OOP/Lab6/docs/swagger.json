@@ -57,6 +57,59 @@
                 }
             }
         },
+        "/forecast/city": {
+            "get": {
+                "description": "Returns current forecast for a given city and country",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forecast"
+                ],
+                "summary": "Get current forecast by city",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "London",
+                        "description": "City name",
+                        "name": "city",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "UK",
+                        "description": "Country code",
+                        "name": "country",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse-clients_ForecastResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/location": {
             "get": {
                 "description": "Returns coordinates for a city by name",
@@ -176,6 +229,59 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.SuccessResponse-array_weather_CurrentWeatherResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/weather/city": {
+            "get": {
+                "description": "Returns current weather for a given city and country",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Get current weather by city",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "London",
+                        "description": "City name",
+                        "name": "city",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "UK",
+                        "description": "Country code",
+                        "name": "country",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse-weather_CurrentWeather"
                         }
                     },
                     "400": {

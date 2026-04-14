@@ -131,3 +131,65 @@ func (h *WeatherHandler) HandleGetMultipleCurrentWeather(c *gin.Context) {
 	fmt.Println(result)
 	c.JSON(200, responses.SuccessResponse[[]weather.CurrentWeatherResponse]{Code: 200, Message: "Success", Data: result})
 }
+
+// HandleGetCurrentWeatherByCity godoc
+// @Summary      Get current weather by city
+// @Description  Returns current weather for a given city and country
+// @Tags         weather
+// @Accept       json
+// @Produce      json
+//
+// @Param        city     query   string  true  "City name"     example(London)
+// @Param        country  query   string  true  "Country code"  example(UK)
+//
+// @Success      200  {object}  responses.SuccessResponse[weather.CurrentWeather]
+// @Failure      400  {object}  responses.StatusResponse
+// @Failure      500  {object}  responses.StatusResponse
+//
+// @Router       /weather/city [get]
+func (h *WeatherHandler) HandleGetCurrentWeatherByCity(control *controllers.CurrentLocationController) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		city := c.Query("city")
+		country := c.Query("country")
+
+		result, err := h.Controller.GetCurrentCityWeather(city, country, control)
+
+		if err != nil {
+			c.JSON(500, responses.StatusResponse{Code: 500, Message: err.Error()})
+			return
+		}
+		c.JSON(200, responses.SuccessResponse[weather.CurrentWeather]{Code: 200, Message: "Success", Data: result})
+
+	}
+}
+
+// HandleGetCurrentForecastByCity godoc
+// @Summary      Get current forecast by city
+// @Description  Returns current forecast for a given city and country
+// @Tags         forecast
+// @Accept       json
+// @Produce      json
+//
+// @Param        city     query   string  true  "City name"     example(London)
+// @Param        country  query   string  true  "Country code"  example(UK)
+//
+// @Success      200  {object}  responses.SuccessResponse[clients.ForecastResponse]
+// @Failure      400  {object}  responses.StatusResponse
+// @Failure      500  {object}  responses.StatusResponse
+//
+// @Router       /forecast/city [get]
+func (h *WeatherHandler) HandleGetCurrentForecastByCity(control *controllers.CurrentLocationController) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		city := c.Query("city")
+		country := c.Query("country")
+
+		result, err := h.Controller.GetCurrentCityForecast(city, country, control)
+
+		if err != nil {
+			c.JSON(500, responses.StatusResponse{Code: 500, Message: err.Error()})
+			return
+		}
+		c.JSON(200, responses.SuccessResponse[clients.ForecastResponse]{Code: 200, Message: "Success", Data: result})
+
+	}
+}
