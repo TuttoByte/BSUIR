@@ -61,7 +61,7 @@ func TestNewOpenWeatherClientCoords_Connection(t *testing.T) {
 
 	cli := NewOpenWeatherCoords("testKey", server.URL)
 
-	_, _, err := cli.GetCurrentLocation("London")
+	_, err := cli.GetLocation("London")
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "connection refused")
 }
@@ -73,6 +73,6 @@ func TestNewOpeeWeatherClientCoords_BadTocken(t *testing.T) {
 	defer server.Close()
 
 	cli := NewOpenWeatherCoords("", server.URL)
-	_, _, err := cli.GetCurrentLocation("London")
+	_, err := cli.GetLocation("London")
 	assert.Error(t, err)
 }

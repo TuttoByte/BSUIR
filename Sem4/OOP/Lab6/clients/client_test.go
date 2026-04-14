@@ -54,23 +54,23 @@ func TestOpenWeatherClient_Coordinates(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "/geo/1.0/direct?q=London&limit=5&appid=testkey", r.URL.String())
 
-		resp := newOpenWeatherCoordResponce([]OpenWeatherCityInfo{
+		resp := []OpenWeatherCityInfo{
 			{
 				Name:    "London",
 				Lat:     decimal.NewFromFloat(51.5073219),
 				Lon:     decimal.NewFromFloat(-0.1276474),
 				Country: "GB",
 			},
-		})
+		}
 
 		json.NewEncoder(w).Encode(resp)
 	}))
 
 	cli := NewOpenWeatherCoords("testkey", ts.URL)
-	lat, lan, err := cli.GetCurrentLocation("London")
+	location, err := cli.GetLocation("London")
 	assert.Nil(t, err)
-	assert.Equal(t, decimal.NewFromFloat(51.5073219), lat)
-	assert.Equal(t, decimal.NewFromFloat(-0.1276474), lan)
+	assert.Equal(t, decimal.NewFromFloat(51.5073219), location[0].Lat)
+	assert.Equal(t, decimal.NewFromFloat(-0.1276474), location[0].Lon)
 }
 
 func TestGoogleWeatherClient_Forecast(t *testing.T) {
