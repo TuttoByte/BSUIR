@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"main/clients"
-	"main/models/location"
 )
 
 type CurrentLocationController struct {
@@ -15,15 +14,11 @@ func NewCurrentLocationController(client clients.CoordinateDataCleint) *CurrentL
 	}
 }
 
-func (cl *CurrentLocationController) GetLocation(name string) (location.CurrentLocation, error) {
-	lat, lon, err := cl.Client.GetCurrentLocation(name)
+func (cl *CurrentLocationController) GetCurentLocation(name string) ([]clients.OpenWeatherCityInfo, error) {
+	data, err := cl.Client.GetLocation(name)
 	if err != nil {
-		return location.CurrentLocation{}, err
+		return nil, err
 	}
 
-	return location.CurrentLocation{
-		Latitude:  lat,
-		Longitude: lon,
-	}, nil
-
+	return data, nil
 }

@@ -79,6 +79,8 @@ func (o *OpenWeatherClient) LocationCurrentTemperature(lat decimal.Decimal, lon 
 	url := fmt.Sprintf("%s?lat=%s&lon=%s&appid=%s&units=metric",
 		o.baseURL, lat.String(), lon.String(), o.apiKey)
 
+	fmt.Println(url)
+
 	resp, err := http.Get(url)
 	if err != nil {
 		return decimal.Zero, fmt.Errorf("failed to call openweather: %w", err)
@@ -98,7 +100,27 @@ func (o *OpenWeatherClient) LocationCurrentTemperature(lat decimal.Decimal, lon 
 }
 
 func (o *OpenWeatherClient) LocationCurrentForcast(lat decimal.Decimal, lon decimal.Decimal) (ForecastResponse, error) {
-	return ForecastResponse{}, nil
+
+	url := fmt.Sprintf("%s?lat=%s&lon=%s&appid=%s&units=metric",
+		o.baseURL, lat.String(), lon.String(), o.apiKey)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return ForecastResponse{}, fmt.Errorf("failed to call openweather: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return ForecastResponse{}, fmt.Errorf("openweather returned bad status: %d", resp.StatusCode)
+	}
+
+	var data openForecastResponce
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		return ForecastResponse{}, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	forcResp := OpenResponseToForecast(data)
+	return forcResp, nil
 }
 func (o *OpenWeatherClient) LocationCurrentForcatByCity(cityName string) (ForecastResponse, error) {
 	return ForecastResponse{}, nil

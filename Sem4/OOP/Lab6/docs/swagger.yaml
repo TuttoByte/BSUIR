@@ -1,0 +1,238 @@
+basePath: /api/v1
+definitions:
+  clients.ForecastResponse:
+    properties:
+      clouds:
+        example: 50
+        type: integer
+      feelsLikeTemperature:
+        example: 14
+        type: number
+      humidity:
+        example: 65
+        type: integer
+      pressure:
+        example: 1013
+        type: number
+      temperature:
+        example: 15.5
+        type: number
+      visibility:
+        example: 10000
+        type: integer
+      windSpeed:
+        example: 10
+        type: number
+    type: object
+  clients.OpenWeatherCityInfo:
+    properties:
+      country:
+        type: string
+      lat:
+        type: number
+      lon:
+        type: number
+      name:
+        type: string
+    type: object
+  responses.StatusResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  responses.SuccessResponse-array_clients_OpenWeatherCityInfo:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/clients.OpenWeatherCityInfo'
+        type: array
+      message:
+        type: string
+    type: object
+  responses.SuccessResponse-array_weather_CurrentWeatherResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/weather.CurrentWeatherResponse'
+        type: array
+      message:
+        type: string
+    type: object
+  responses.SuccessResponse-clients_ForecastResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/clients.ForecastResponse'
+      message:
+        type: string
+    type: object
+  responses.SuccessResponse-weather_CurrentWeather:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/weather.CurrentWeather'
+      message:
+        type: string
+    type: object
+  weather.CurrentWeather:
+    properties:
+      temperature:
+        type: number
+    type: object
+  weather.CurrentWeatherRequest:
+    properties:
+      lat:
+        type: number
+      lon:
+        type: number
+      type:
+        type: string
+    type: object
+  weather.CurrentWeatherResponse:
+    properties:
+      lat:
+        type: number
+      lon:
+        type: number
+      temperature:
+        type: number
+    type: object
+info:
+  contact: {}
+  title: Wheather Example API
+  version: "1.0"
+paths:
+  /forecast:
+    get:
+      description: Returns current forecast for given coordinates
+      parameters:
+      - default: "18.300231990440125"
+        description: Latitude
+        in: query
+        name: lat
+        required: true
+        type: string
+      - default: "-64.8251590359234"
+        description: Longitude
+        in: query
+        name: lon
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse-clients_ForecastResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      summary: Get Current Forecast
+      tags:
+      - forecast
+  /location:
+    get:
+      consumes:
+      - application/json
+      description: Returns coordinates for a city by name
+      parameters:
+      - description: City name
+        example: London
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse-array_clients_OpenWeatherCityInfo'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      summary: Get city coordinates
+      tags:
+      - coordinates
+  /weather:
+    get:
+      description: Returns current weather for given coordinates
+      parameters:
+      - default: "18.300231990440125"
+        description: Latitude
+        in: query
+        name: lat
+        required: true
+        type: string
+      - default: "-64.8251590359234"
+        description: Longitude
+        in: query
+        name: lon
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse-weather_CurrentWeather'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      summary: Get Current Weather
+      tags:
+      - weather
+    post:
+      consumes:
+      - application/json
+      description: Returns current weather for multiple coordinates
+      parameters:
+      - description: Array of weather requests
+        in: body
+        name: request
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/weather.CurrentWeatherRequest'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse-array_weather_CurrentWeatherResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      summary: Get multiple current weather
+      tags:
+      - weather
+swagger: "2.0"

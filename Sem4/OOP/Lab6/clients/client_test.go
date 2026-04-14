@@ -54,7 +54,7 @@ func TestOpenWeatherClient_Coordinates(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "/geo/1.0/direct?q=London&limit=5&appid=testkey", r.URL.String())
 
-		resp := newOpenWeatherCoordResponce([]openWeatherCityInfo{
+		resp := newOpenWeatherCoordResponce([]OpenWeatherCityInfo{
 			{
 				Name:    "London",
 				Lat:     decimal.NewFromFloat(51.5073219),

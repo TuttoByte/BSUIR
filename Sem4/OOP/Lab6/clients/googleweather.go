@@ -57,8 +57,8 @@ type googleForecastResponse struct {
 			Type    string `json:"type"`
 		} `json:"probability"`
 		Qpf struct {
-			Quantity int    `json:"quantity"`
-			Unit     string `json:"unit"`
+			Quantity decimal.Decimal `json:"quantity"`
+			Unit     string          `json:"unit"`
 		} `json:"qpf"`
 	} `json:"precipitation"`
 	ThunderstormProbability int `json:"thunderstormProbability"`
@@ -98,8 +98,8 @@ type googleForecastResponse struct {
 			Unit    string          `json:"unit"`
 		} `json:"minTemperature"`
 		Qpf struct {
-			Quantity int    `json:"quantity"`
-			Unit     string `json:"unit"`
+			Quantity decimal.Decimal `json:"quantity"`
+			Unit     string          `json:"unit"`
 		} `json:"qpf"`
 	} `json:"currentConditionsHistory"`
 }
@@ -138,7 +138,25 @@ func (g *GoogleWeatherClient) LocationCurrentTemperature(lat decimal.Decimal, lo
 }
 
 func (g *GoogleWeatherClient) LocationCurrentForcast(lat decimal.Decimal, lon decimal.Decimal) (ForecastResponse, error) {
-	return ForecastResponse{}, nil
+	url := fmt.Sprintf("%s/v1/currentConditions:lookup?key=%s&location.latitude=%s&location.longitude=%s",
+		g.baseURL, g.apiKey, lat.String(), lon.String())
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return ForecastResponse{}, errors.New("could not get current weather")
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return ForecastResponse{}, errors.New(fmt.Sprintf("google wether returned bad status code: %d", resp.StatusCode))
+	}
+
+	var data googleForecastResponse
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		return ForecastResponse{}, errors.New(fmt.Sprintf("could not decode json response: %s", err.Error()))
+	}
+
+	forResp := GoogleResponseToForecast(data)
+	return forResp, err
 }
 func (g *GoogleWeatherClient) LocationCurrentForcatByCity(cityName string) (ForecastResponse, error) {
 	return ForecastResponse{}, nil

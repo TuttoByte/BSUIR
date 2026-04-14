@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type openWeatherCityInfo struct {
+type OpenWeatherCityInfo struct {
 	Name    string          `json:"name"`
 	Lat     decimal.Decimal `json:"lat"`
 	Lon     decimal.Decimal `json:"lon"`
@@ -15,13 +15,13 @@ type openWeatherCityInfo struct {
 }
 
 type openWeatherCoordResponce struct {
-	Infos []openWeatherCityInfo
+	Infos []OpenWeatherCityInfo
 }
 
-func newOpenWeatherCoordResponce(infos []openWeatherCityInfo) openWeatherCoordResponce {
+func newOpenWeatherCoordResponce(infos []OpenWeatherCityInfo) openWeatherCoordResponce {
 	if len(infos) == 0 {
 		return openWeatherCoordResponce{
-			Infos: make([]openWeatherCityInfo, 0),
+			Infos: make([]OpenWeatherCityInfo, 0),
 		}
 
 	}
@@ -42,24 +42,24 @@ func NewOpenWeatherCoords(apiKey string, baseUrl string) *OpenWeatherCoords {
 	}
 }
 
-func (o *OpenWeatherCoords) GetCurrentLocation(cityName string) (decimal.Decimal, decimal.Decimal, error) {
+func (o *OpenWeatherCoords) GetLocation(cityName string) ([]OpenWeatherCityInfo, error) {
 
 	url := fmt.Sprintf("%s/geo/1.0/direct?q=%s&limit=5&appid=%s", o.baseURL, cityName, o.apiKey)
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return decimal.Zero, decimal.Zero, fmt.Errorf("failed to fetch location: %w", err)
+		return nil, fmt.Errorf("failed to fetch location: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return decimal.Zero, decimal.Zero, fmt.Errorf("bad status code: %d", resp.StatusCode)
+		return nil, fmt.Errorf("bad status code: %d", resp.StatusCode)
 	}
 
-	data := newOpenWeatherCoordResponce(nil)
+	var data []OpenWeatherCityInfo
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
-		return decimal.Zero, decimal.Zero, fmt.Errorf("failed to decode response: %w", err)
+		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	return data.Infos[0].Lat, data.Infos[0].Lon, nil
+	return data, nil
 }

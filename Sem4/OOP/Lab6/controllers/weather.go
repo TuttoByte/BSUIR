@@ -28,6 +28,25 @@ func (c *CurrentWeatherController) GetCurrentWeather(lat decimal.Decimal, lon de
 	}, nil
 }
 
-func (c *CurrentWeatherController) GetCurrentForecast() {
+func (c *CurrentWeatherController) GetCurrentForecast(lat decimal.Decimal, lon decimal.Decimal) (clients.ForecastResponse, error) {
 
+	forecast, err := c.Client.LocationCurrentForcast(lat, lon)
+	if err != nil {
+		return clients.ForecastResponse{}, err
+	}
+	return forecast, nil
+}
+
+func (c *CurrentWeatherController) GetMultipleWeather(weathers []weather.CurrentWeatherRequest) ([]weather.CurrentWeatherResponse, error) {
+	data := make([]weather.CurrentWeatherResponse, len(weathers))
+	for i, w := range weathers {
+		temp, err := c.Client.LocationCurrentTemperature(w.Lat, w.Lon)
+		if err != nil {
+			return nil, err
+		}
+		data[i].Lat = w.Lat
+		data[i].Lon = w.Lon
+		data[i].Temperature = temp
+	}
+	return data, nil
 }

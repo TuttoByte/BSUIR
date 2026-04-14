@@ -1,0 +1,358 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Wheather Example API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/forecast": {
+            "get": {
+                "description": "Returns current forecast for given coordinates",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "forecast"
+                ],
+                "summary": "Get Current Forecast",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "18.300231990440125",
+                        "description": "Latitude",
+                        "name": "lat",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "-64.8251590359234",
+                        "description": "Longitude",
+                        "name": "lon",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse-clients_ForecastResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/location": {
+            "get": {
+                "description": "Returns coordinates for a city by name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "coordinates"
+                ],
+                "summary": "Get city coordinates",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "London",
+                        "description": "City name",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse-array_clients_OpenWeatherCityInfo"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/weather": {
+            "get": {
+                "description": "Returns current weather for given coordinates",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Get Current Weather",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "18.300231990440125",
+                        "description": "Latitude",
+                        "name": "lat",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "-64.8251590359234",
+                        "description": "Longitude",
+                        "name": "lon",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse-weather_CurrentWeather"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Returns current weather for multiple coordinates",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Get multiple current weather",
+                "parameters": [
+                    {
+                        "description": "Array of weather requests",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/weather.CurrentWeatherRequest"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SuccessResponse-array_weather_CurrentWeatherResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "clients.ForecastResponse": {
+            "type": "object",
+            "properties": {
+                "clouds": {
+                    "type": "integer",
+                    "example": 50
+                },
+                "feelsLikeTemperature": {
+                    "type": "number",
+                    "example": 14
+                },
+                "humidity": {
+                    "type": "integer",
+                    "example": 65
+                },
+                "pressure": {
+                    "type": "number",
+                    "example": 1013
+                },
+                "temperature": {
+                    "type": "number",
+                    "example": 15.5
+                },
+                "visibility": {
+                    "type": "integer",
+                    "example": 10000
+                },
+                "windSpeed": {
+                    "type": "number",
+                    "example": 10
+                }
+            }
+        },
+        "clients.OpenWeatherCityInfo": {
+            "type": "object",
+            "properties": {
+                "country": {
+                    "type": "string"
+                },
+                "lat": {
+                    "type": "number"
+                },
+                "lon": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.StatusResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.SuccessResponse-array_clients_OpenWeatherCityInfo": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/clients.OpenWeatherCityInfo"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.SuccessResponse-array_weather_CurrentWeatherResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/weather.CurrentWeatherResponse"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.SuccessResponse-clients_ForecastResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/clients.ForecastResponse"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.SuccessResponse-weather_CurrentWeather": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/weather.CurrentWeather"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "weather.CurrentWeather": {
+            "type": "object",
+            "properties": {
+                "temperature": {
+                    "type": "number"
+                }
+            }
+        },
+        "weather.CurrentWeatherRequest": {
+            "type": "object",
+            "properties": {
+                "lat": {
+                    "type": "number"
+                },
+                "lon": {
+                    "type": "number"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "weather.CurrentWeatherResponse": {
+            "type": "object",
+            "properties": {
+                "lat": {
+                    "type": "number"
+                },
+                "lon": {
+                    "type": "number"
+                },
+                "temperature": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}
