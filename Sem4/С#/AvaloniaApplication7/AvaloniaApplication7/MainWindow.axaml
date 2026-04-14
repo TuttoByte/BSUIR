@@ -150,6 +150,15 @@
                                    FontSize="13"
                                    FontWeight="Medium"/>
                     </Button>
+                    
+                    <Button x:Name="Converter" Classes="nav-item"
+                            Width="200"
+                            Click="ShowConverter">
+                        <TextBlock Text="Converter"
+                                   Foreground="#e8e8e8"
+                                   FontSize="13"
+                                   FontWeight="Medium"/>
+                    </Button>
                 </StackPanel>
             </DockPanel>
         </Border>

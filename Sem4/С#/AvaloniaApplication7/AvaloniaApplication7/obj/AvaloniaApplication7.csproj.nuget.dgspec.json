@@ -65,7 +65,19 @@
               "target": "Package",
               "version": "[11.3.12, )"
             },
+            "DialogHost.Avalonia": {
+              "target": "Package",
+              "version": "[0.10.4, )"
+            },
+            "HttpClientBuilder": {
+              "target": "Package",
+              "version": "[0.0.3, )"
+            },
             "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[11.0.0-preview.2.26159.112, )"
+            },
+            "Microsoft.Extensions.Http": {
               "target": "Package",
               "version": "[11.0.0-preview.2.26159.112, )"
             },

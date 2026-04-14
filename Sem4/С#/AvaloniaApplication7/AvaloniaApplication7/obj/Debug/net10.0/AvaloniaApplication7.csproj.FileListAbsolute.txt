@@ -108,3 +108,17 @@
 /home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/runtimes/win-arm64/native/e_sqlite3.dll
 /home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/runtimes/win-x64/native/e_sqlite3.dll
 /home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/runtimes/win-x86/native/e_sqlite3.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/HttpClientBuilder.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Configuration.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Configuration.Binder.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Diagnostics.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Http.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Logging.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Logging.Abstractions.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Options.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/Microsoft.Extensions.Primitives.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/System.Diagnostics.DiagnosticSource.dll
+/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/bin/Debug/net10.0/DialogHost.Avalonia.dll

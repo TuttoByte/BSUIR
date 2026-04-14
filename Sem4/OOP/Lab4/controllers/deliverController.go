@@ -8,7 +8,7 @@ import (
 type DeliveryInfo struct {
 	TransportType string
 	Inner         string
-	Distance      float64
+	Distance      int
 }
 
 type CargoInfo struct {
@@ -51,7 +51,7 @@ func (d *DeliverController) GetDeliveyResult() (float64, float64, error) {
 		return 0, 0, err
 	}
 
-	total := sum + deliveryType.GetPetrolium()*d.info.Distance
-	time := d.info.Distance / deliveryType.GetSpeed()
+	total := sum + deliveryType.GetPetrolium()*float64(d.info.Distance)
+	time := float64(d.info.Distance) / deliveryType.GetSpeed()
 	return total, time, nil
 }

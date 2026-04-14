@@ -17,7 +17,10 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="DialogHost.Avalonia" Version="0.10.4" />
+        <PackageReference Include="HttpClientBuilder" Version="0.0.3" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.2.26159.112" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="11.0.0-preview.2.26159.112" />
         <PackageReference Include="RandomFriendlyNameGenerator" Version="1.0.9" />
         <PackageReference Include="ReactiveUI" Version="23.1.8" />
         <PackageReference Include="sqlite-net-pcl" Version="1.10.196-beta" />

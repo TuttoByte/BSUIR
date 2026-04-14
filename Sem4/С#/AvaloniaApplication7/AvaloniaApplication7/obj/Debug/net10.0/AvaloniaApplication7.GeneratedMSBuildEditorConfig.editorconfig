@@ -29,6 +29,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/udainoko/Documents/BSUIR/Sem4/С\#/AvaloniaApplication7/AvaloniaApplication7/Content/Calculus.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/udainoko/Documents/BSUIR/Sem4/С\#/AvaloniaApplication7/AvaloniaApplication7/Content/CustomConv.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/udainoko/Documents/BSUIR/Sem4/С\#/AvaloniaApplication7/AvaloniaApplication7/Content/MainPage.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 

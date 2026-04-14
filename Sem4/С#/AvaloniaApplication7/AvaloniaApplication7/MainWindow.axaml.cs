@@ -15,6 +15,7 @@ namespace AvaloniaApplication7
         MainPage _main;
         CustomProgressBar _progressBar;
         Picker _picker;
+        CustomConv _conv;
 
         public MainWindow()
         {
@@ -27,11 +28,13 @@ namespace AvaloniaApplication7
             _main = new MainPage();
             _progressBar = new CustomProgressBar();
             _picker = new Picker();
+            _conv = new CustomConv();
             MainContent.Content = _progressBar;
             ButtonCalculus.Classes.Remove("active");
             ButtonMain.Classes.Remove("active");
             ProgressBar.Classes.Add("active");
             Picker.Classes.Remove("active");
+            Converter.Classes.Remove("active");
 
         }
 
@@ -62,6 +65,7 @@ namespace AvaloniaApplication7
             ButtonMain.Classes.Remove("active");
             ProgressBar.Classes.Remove("active");
             Picker.Classes.Remove("active");
+            Converter.Classes.Remove("active");
             MainContent.Content = _calculus;
             ToggleSidebar_Click(sender, e);
        
@@ -74,6 +78,7 @@ namespace AvaloniaApplication7
             ButtonMain.Classes.Add("active");
             ProgressBar.Classes.Remove("active");
             Picker.Classes.Remove("active");
+            Converter.Classes.Remove("active");
             MainContent.Content = _main;
             ToggleSidebar_Click(sender, e);
         }
@@ -85,6 +90,7 @@ namespace AvaloniaApplication7
             ButtonMain.Classes.Remove("active");
             Picker.Classes.Remove("active");
             ProgressBar.Classes.Add("active");
+            Converter.Classes.Remove("active");
             MainContent.Content =  _progressBar;
             ToggleSidebar_Click(sender, e);
             
@@ -97,7 +103,20 @@ namespace AvaloniaApplication7
             ButtonMain.Classes.Remove("active");
             ProgressBar.Classes.Remove("active");
             Picker.Classes.Add("active");
+            Converter.Classes.Remove("active");
             MainContent.Content =  _picker;
+            ToggleSidebar_Click(sender, e);
+        }
+        
+        public void ShowConverter(object? sender, RoutedEventArgs e)
+        {
+            PageTitle.Text = "Converter";
+            ButtonCalculus.Classes.Remove("active");
+            ButtonMain.Classes.Remove("active");
+            ProgressBar.Classes.Remove("active");
+            Picker.Classes.Remove("active");
+            Converter.Classes.Add("active");
+            MainContent.Content =  _conv;
             ToggleSidebar_Click(sender, e);
         }
     }

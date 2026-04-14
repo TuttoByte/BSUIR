@@ -1,8 +1,8 @@
 package savers
 
 import (
+	"bytes"
 	"crypto/aes"
-	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
 	"io"
@@ -23,10 +23,6 @@ func NewEncrypter() *Encrypter {
 
 }
 
-func (e *Encrypter) Init() {
-
-}
-
 func (e *Encrypter) GenerateKey() error {
 	key := make([]byte, KeySize)
 	_, err := rand.Read(key[:])
@@ -42,7 +38,7 @@ func (e *Encrypter) GetKey() string {
 }
 
 func (e *Encrypter) Encrypt(data []byte) (string, error) {
-	block, err := aes.NewCipher(e.key[:])
+	_, err := aes.NewCipher(e.key[:])
 	if err != nil {
 		return "", err
 	}
@@ -52,8 +48,11 @@ func (e *Encrypter) Encrypt(data []byte) (string, error) {
 		return "", err
 	}
 
-	stream := cipher.NewCBCEncrypter(block, iv)
-	stream.CryptBlocks(cipherText[aes.BlockSize:], data)
-
 	return base64.StdEncoding.EncodeToString(cipherText), nil
+}
+
+func pkcs7Pad(data []byte, blockSize int) []byte {
+	padLen := blockSize - len(data)%blockSize
+	pad := bytes.Repeat([]byte{byte(padLen)}, padLen)
+	return append(data, pad...)
 }

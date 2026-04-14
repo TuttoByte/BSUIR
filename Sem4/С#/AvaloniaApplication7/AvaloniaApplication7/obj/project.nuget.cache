@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "qVaeEaFTXHI=",
+  "dgSpecHash": "eJLP8iSr++I=",
   "success": true,
   "projectFilePath": "/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/AvaloniaApplication7.csproj",
   "expectedPackageFiles": [
@@ -19,15 +19,28 @@
     "/home/udainoko/.nuget/packages/avalonia.themes.simple/11.3.12/avalonia.themes.simple.11.3.12.nupkg.sha512",
     "/home/udainoko/.nuget/packages/avalonia.win32/11.3.12/avalonia.win32.11.3.12.nupkg.sha512",
     "/home/udainoko/.nuget/packages/avalonia.x11/11.3.12/avalonia.x11.11.3.12.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/dialoghost.avalonia/0.10.4/dialoghost.avalonia.0.10.4.nupkg.sha512",
     "/home/udainoko/.nuget/packages/dynamicdata/9.4.1/dynamicdata.9.4.1.nupkg.sha512",
     "/home/udainoko/.nuget/packages/harfbuzzsharp/8.3.1.1/harfbuzzsharp.8.3.1.1.nupkg.sha512",
     "/home/udainoko/.nuget/packages/harfbuzzsharp.nativeassets.linux/8.3.1.1/harfbuzzsharp.nativeassets.linux.8.3.1.1.nupkg.sha512",
     "/home/udainoko/.nuget/packages/harfbuzzsharp.nativeassets.macos/8.3.1.1/harfbuzzsharp.nativeassets.macos.8.3.1.1.nupkg.sha512",
     "/home/udainoko/.nuget/packages/harfbuzzsharp.nativeassets.webassembly/8.3.1.1/harfbuzzsharp.nativeassets.webassembly.8.3.1.1.nupkg.sha512",
     "/home/udainoko/.nuget/packages/harfbuzzsharp.nativeassets.win32/8.3.1.1/harfbuzzsharp.nativeassets.win32.8.3.1.1.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/httpclientbuilder/0.0.3/httpclientbuilder.0.0.3.nupkg.sha512",
     "/home/udainoko/.nuget/packages/microcom.runtime/0.11.0/microcom.runtime.0.11.0.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.configuration/11.0.0-preview.2.26159.112/microsoft.extensions.configuration.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.configuration.abstractions/11.0.0-preview.2.26159.112/microsoft.extensions.configuration.abstractions.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.configuration.binder/11.0.0-preview.2.26159.112/microsoft.extensions.configuration.binder.11.0.0-preview.2.26159.112.nupkg.sha512",
     "/home/udainoko/.nuget/packages/microsoft.extensions.dependencyinjection/11.0.0-preview.2.26159.112/microsoft.extensions.dependencyinjection.11.0.0-preview.2.26159.112.nupkg.sha512",
     "/home/udainoko/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/11.0.0-preview.2.26159.112/microsoft.extensions.dependencyinjection.abstractions.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.diagnostics/11.0.0-preview.2.26159.112/microsoft.extensions.diagnostics.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.diagnostics.abstractions/11.0.0-preview.2.26159.112/microsoft.extensions.diagnostics.abstractions.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.http/11.0.0-preview.2.26159.112/microsoft.extensions.http.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.logging/11.0.0-preview.2.26159.112/microsoft.extensions.logging.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.logging.abstractions/11.0.0-preview.2.26159.112/microsoft.extensions.logging.abstractions.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.options/11.0.0-preview.2.26159.112/microsoft.extensions.options.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.options.configurationextensions/11.0.0-preview.2.26159.112/microsoft.extensions.options.configurationextensions.11.0.0-preview.2.26159.112.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.primitives/11.0.0-preview.2.26159.112/microsoft.extensions.primitives.11.0.0-preview.2.26159.112.nupkg.sha512",
     "/home/udainoko/.nuget/packages/randomfriendlynamegenerator/1.0.9/randomfriendlynamegenerator.1.0.9.nupkg.sha512",
     "/home/udainoko/.nuget/packages/reactiveui/23.1.8/reactiveui.23.1.8.nupkg.sha512",
     "/home/udainoko/.nuget/packages/skiasharp/2.88.9/skiasharp.2.88.9.nupkg.sha512",
@@ -44,8 +57,22 @@
     "/home/udainoko/.nuget/packages/sqlitepclraw.core/2.1.2/sqlitepclraw.core.2.1.2.nupkg.sha512",
     "/home/udainoko/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.1.2/sqlitepclraw.lib.e_sqlite3.2.1.2.nupkg.sha512",
     "/home/udainoko/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.2/sqlitepclraw.provider.e_sqlite3.2.1.2.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/system.diagnostics.diagnosticsource/11.0.0-preview.2.26159.112/system.diagnostics.diagnosticsource.11.0.0-preview.2.26159.112.nupkg.sha512",
     "/home/udainoko/.nuget/packages/system.reactive/6.1.0/system.reactive.6.1.0.nupkg.sha512",
     "/home/udainoko/.nuget/packages/tmds.dbus.protocol/0.21.2/tmds.dbus.protocol.0.21.2.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'Tmds.DBus.Protocol' 0.21.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
+      "projectPath": "/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/AvaloniaApplication7.csproj",
+      "warningLevel": 1,
+      "filePath": "/home/udainoko/Documents/BSUIR/Sem4/С#/AvaloniaApplication7/AvaloniaApplication7/AvaloniaApplication7.csproj",
+      "libraryId": "Tmds.DBus.Protocol",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }

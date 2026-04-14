@@ -2,7 +2,67 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:local="using:AvaloniaApplication7.Content"
+             x:DataType="local:CustomConv"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="800"
              x:Class="AvaloniaApplication7.Content.CustomConv">
-    Welcome to Avalonia!
+    <Border Background="{StaticResource BgColor}">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto, Auto, Auto">
+            <TextBlock Text="Converter"
+                       FontSize="20"
+                       FontWeight="SemiBold" />
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal"  HorizontalAlignment="Center">
+                <CalendarDatePicker x:Name="CalendarDatePicker"  DisplayDateEnd="{x:Static system:DateTime.Today}" 
+                                    SelectedDate="{x:Static system:DateTime.Today}" IsTodayHighlighted="True" />
+                <Button Width="180" Content="Load" Click="OnLoadButtonClicked"/>
+            </StackPanel>
+
+            <Border Grid.Row="2"
+                    BorderBrush="#D0D7E2"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="8"
+                    Height="300">
+                <ListBox  x:Name = "ListBox" ItemsSource="{Binding Rates}" MaxHeight="300" SelectionChanged="OnSelectionClicked">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate> <StackPanel Margin="5">
+                                <TextBlock Text="{Binding Cur_Abbreviation}" />
+                                <TextBlock Text="{Binding Cur_Name}" />
+                                <TextBlock Text="{Binding Cur_OfficialRate}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+
+            <TextBlock Grid.Row="3"
+                       x:Name="StatusText"
+                       Text="Select date and press Load"
+                       Foreground="#5A6578" />
+            
+            
+            <Grid Grid.Row="4" >
+                <StackPanel Orientation="Vertical">
+                <TextBlock x:Name="Currency1" Margin="1 5">Not Selected</TextBlock>
+                <TextBox x:Name="FirsVal" Text="0" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                         Foreground="{StaticResource PrColor}" FontSize = "15" FontWeight = "Medium" MaxWidth="150" Margin="5, 0"/>
+                </StackPanel>
+                
+                <Button HorizontalAlignment="Center" Content="↑↓" Click="OnSwapCurrency"> </Button>
+                
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+                    <TextBlock x:Name="Currency2" Margin="0 5">NotSelected</TextBlock>
+                    <TextBox x:Name="SecondVal" Text="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                             Foreground="{StaticResource PrColor}" FontSize = "15" FontWeight = "Medium" 
+                             MaxWidth="150" Margin="5, 0" IsReadOnly="True" />
+                </StackPanel>
+                
+            </Grid>
+            <Button Grid.Row="5" x:Name="ConvertTo"  Content="Convert" HorizontalAlignment="Center" Width="100" Click="ConvertButtonClicked"/>
+            
+        </Grid>
+    </Border>
+
 </UserControl>
