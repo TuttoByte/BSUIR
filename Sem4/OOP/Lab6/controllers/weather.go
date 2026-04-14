@@ -27,3 +27,7 @@ func (c *CurrentWeatherController) GetCurrentWeather(lat decimal.Decimal, lon de
 		Temperature: temperature,
 	}, nil
 }
+
+func (c *CurrentWeatherController) GetCurrentForecast() {
+
+}

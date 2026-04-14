@@ -1,14 +1,13 @@
 package api
 
 import (
-	"clients"
-	"controllers"
-	weather "models/weather"
-	"shared/responses"
-	"shared/utils"
-
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
+	"main/clients"
+	"main/controllers"
+	"main/models/weather"
+	"main/shared/responses"
+	"main/shared/utils"
 )
 
 type WeatherHandler struct {
