@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "dgSpecHash": "xtWMeCDXMS0=",
+  "success": true,
+  "projectFilePath": "/home/udainoko/Documents/BSUIR/Sem4/С#/Lab7-8/AutoSeller/CarSeller.Presistence/CarSeller.Presistence.csproj",
+  "expectedPackageFiles": [
+    "/home/udainoko/.nuget/packages/microsoft.entityframeworkcore/10.0.6/microsoft.entityframeworkcore.10.0.6.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.entityframeworkcore.abstractions/10.0.6/microsoft.entityframeworkcore.abstractions.10.0.6.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.entityframeworkcore.analyzers/10.0.6/microsoft.entityframeworkcore.analyzers.10.0.6.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.caching.abstractions/10.0.6/microsoft.extensions.caching.abstractions.10.0.6.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.caching.memory/10.0.6/microsoft.extensions.caching.memory.10.0.6.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.dependencyinjection/11.0.0-preview.3.26207.106/microsoft.extensions.dependencyinjection.11.0.0-preview.3.26207.106.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/11.0.0-preview.3.26207.106/microsoft.extensions.dependencyinjection.abstractions.11.0.0-preview.3.26207.106.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.logging/10.0.6/microsoft.extensions.logging.10.0.6.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.logging.abstractions/10.0.6/microsoft.extensions.logging.abstractions.10.0.6.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.options/10.0.6/microsoft.extensions.options.10.0.6.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/microsoft.extensions.primitives/10.0.6/microsoft.extensions.primitives.10.0.6.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/system.diagnostics.eventlog/11.0.0-preview.3.26207.106/system.diagnostics.eventlog.11.0.0-preview.3.26207.106.nupkg.sha512",
+    "/home/udainoko/.nuget/packages/system.serviceprocess.servicecontroller/11.0.0-preview.3.26207.106/system.serviceprocess.servicecontroller.11.0.0-preview.3.26207.106.nupkg.sha512"
+  ],
+  "logs": []
+}
