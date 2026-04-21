@@ -1,7 +1,10 @@
 package api
 
 import (
+	"Lab7/clients/contracts"
+	models2 "Lab7/clients/models"
 	"Lab7/shared/configs"
+	"Lab7/shared/crypto"
 	"Lab7/shared/tockens/auth"
 	"Lab7/shared/tockens/models"
 	"fmt"
@@ -14,6 +17,7 @@ type App struct {
 	token     *auth.PasetoAuth
 	routerApi *fiber.App
 	config    configs.Config
+	db        contracts.DataBase
 }
 
 const (
@@ -28,10 +32,16 @@ func NewApp(config configs.Config, api *fiber.App) *App {
 		return nil
 	}
 
+	db, err := models2.NewPostgreSQL()
+	if err != nil {
+		return nil
+	}
+
 	app := &App{
 		token:     pasetoToken,
 		routerApi: api,
 		config:    config,
+		db:        db,
 	}
 	app.SetApi()
 	return app
@@ -62,6 +72,24 @@ func (a *App) Login(c fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"token": pasetoToken})
 
+}
+
+func (a *App) Register(c fiber.Ctx) error {
+	creds := new(models.RegisterInfo)
+
+	if err := c.Bind().JSON(creds); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	hash, err := crypto.HashPassword(creds.Password)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	err = a.db.AddUser(creds.Username, hash)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{})
 }
 
 func (a *App) CheckAuth() fiber.Handler {
@@ -95,6 +123,7 @@ func (a *App) CheckAuth() fiber.Handler {
 
 func (a *App) SetApi() {
 	a.routerApi.Post("/login", a.Login)
+	a.routerApi.Post("/register", a.Register)
 
 	protectedApi := a.routerApi.Group("api", a.CheckAuth())
 

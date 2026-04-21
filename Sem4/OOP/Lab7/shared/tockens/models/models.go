@@ -31,3 +31,8 @@ type Credentials struct {
 	Password string `json:"password"`
 	Username string `json:"username"`
 }
+
+type RegisterInfo struct {
+	Credentials
+	Email string `json:"email"`
+}
