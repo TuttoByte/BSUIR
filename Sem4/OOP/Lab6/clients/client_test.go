@@ -35,7 +35,6 @@ func TestGoogleWetherClient(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t,
 			"/v1/currentConditions:lookup?key=testkey&location.latitude=55.7558&location.longitude=37.6173", r.URL.String())
-
 		resp := googleWeatherResponse{
 			Temperature: struct {
 				Degrees decimal.Decimal `json:"degrees"`
