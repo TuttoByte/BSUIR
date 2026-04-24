@@ -36,3 +36,8 @@ type RegisterInfo struct {
 	Credentials
 	Email string `json:"email"`
 }
+
+type AnyUserInfo struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}

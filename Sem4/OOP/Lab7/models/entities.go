@@ -8,9 +8,10 @@ type Interviewer struct {
 }
 
 type Candidate struct {
+	ID    uint64 `gorm:"primaryKey"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
-	InterviewGrade
+	//Grade InterviewGrade
 }
 
 type InterviewGrade struct {
@@ -20,6 +21,7 @@ type InterviewGrade struct {
 }
 
 type InterwieweProblem struct {
+	ID    uint64 `gorm:"primaryKey"`
 	Text  string `json:"text"`
 	Grade int    `json:"grade"`
 	Theme string `json:"theme"`

@@ -10,9 +10,13 @@ import (
 	"log"
 )
 
-// @title           Inteerwie Session App
+// @title           Interwier
 // @version         1.0
 // @BasePath
+// @securityDefinitions.apikey PASETOAuth
+// @in header
+// @name Authorization
+// @description Введите "Bearer <PASETO токен>". Получите токен на /login и прикрепите его.
 func main() {
 	err := godotenv.Load()
 	if err != nil {

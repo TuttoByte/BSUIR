@@ -1,4 +1,11 @@
 definitions:
+  models.AnyUserInfo:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+    type: object
   models.Credentials:
     properties:
       password:
@@ -17,9 +24,47 @@ definitions:
     type: object
 info:
   contact: {}
-  title: Inteerwie Session App
+  title: Interwier
   version: "1.0"
 paths:
+  /api/candidates:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт кандидата в защищённой зоне
+      parameters:
+      - description: Candidate info
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.AnyUserInfo'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Добавить кандидата (требует PASETO токен)
+      tags:
+      - candidates
   /login:
     post:
       consumes:
@@ -68,4 +113,11 @@ paths:
       summary: Register user
       tags:
       - sign in
+securityDefinitions:
+  PASETOAuth:
+    description: Введите "Bearer <PASETO токен>". Получите токен на /login и прикрепите
+      его.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

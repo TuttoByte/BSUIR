@@ -195,6 +195,8 @@ func (a *App) SetApi() {
 		return c.SendString(owner + role + footer)
 
 	})
+	protectedApi.Post("/candidates", a.AddCandidateHandler)
+
 }
 
 func (a *App) Start() error {
