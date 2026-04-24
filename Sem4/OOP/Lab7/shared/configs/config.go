@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"github.com/joho/godotenv"
+	"os"
 	"time"
 )
 
@@ -12,12 +12,11 @@ type Config struct {
 }
 
 func Load() (Config, error) {
-	err := godotenv.Load()
-	if err != nil {
-		return Config{}, err
-	}
-
 	var config Config
+
+	config.TokenKey = os.Getenv("TOKEN_KEY")
+	config.TokenDuration, _ = time.ParseDuration(os.Getenv("TOKEN_DURATION"))
+	config.Address = os.Getenv("ADDRESS")
 
 	return config, nil
 }

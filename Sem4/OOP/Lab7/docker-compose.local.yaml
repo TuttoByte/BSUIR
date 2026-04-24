@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15.4
+    container_name: lab7-postgres
+    ports:
+      - "5439:5432"
+    environment:
+      - POSTGRES_DB=lab7
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+    volumes:
+      - pg-data-local:/var/lib/postgresql/data_local
+volumes:
+    pg-data-local:

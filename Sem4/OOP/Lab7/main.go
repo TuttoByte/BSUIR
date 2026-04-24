@@ -3,11 +3,21 @@ package main
 import (
 	"Lab7/api"
 	"Lab7/shared/configs"
+	"github.com/gofiber/contrib/v3/swaggerui"
 	"github.com/gofiber/fiber/v3"
+	"github.com/joho/godotenv"
+
 	"log"
 )
 
+// @title           Inteerwie Session App
+// @version         1.0
+// @BasePath
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		panic("Error loading .env file")
+	}
 
 	cfg, err := configs.Load()
 	if err != nil {
@@ -15,7 +25,22 @@ func main() {
 	}
 
 	routerApi := fiber.New()
-	app := api.NewApp(cfg, routerApi)
+
+	//Swagger
+	cfgSwagger := swaggerui.Config{
+		BasePath: "/",
+		FilePath: "docs/swagger.json",
+		Path:     "swagger",
+		Title:    "Swagger API Docs",
+	}
+
+	app, err := api.NewApp(cfg, routerApi)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	routerApi.Use(swaggerui.New(cfgSwagger))
+
 	err = app.Start()
 	if err != nil {
 		log.Fatal(err)

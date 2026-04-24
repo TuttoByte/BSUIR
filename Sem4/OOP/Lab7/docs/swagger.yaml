@@ -1,0 +1,71 @@
+definitions:
+  models.Credentials:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.RegisterInfo:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Inteerwie Session App
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login user and return pasetto tocken
+      parameters:
+      - description: Sign in info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.Credentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Login user
+      tags:
+      - log in
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Returns nil error of success
+      parameters:
+      - description: Sign in info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Register user
+      tags:
+      - sign in
+swagger: "2.0"

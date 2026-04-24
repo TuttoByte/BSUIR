@@ -1,12 +1,13 @@
 package api
 
 import (
-	"Lab7/clients/contracts"
-	models2 "Lab7/clients/models"
+	"Lab7/controllers"
+	entities "Lab7/models"
 	"Lab7/shared/configs"
 	"Lab7/shared/crypto"
 	"Lab7/shared/tockens/auth"
 	"Lab7/shared/tockens/models"
+	"context"
 	"fmt"
 	"strings"
 
@@ -17,7 +18,9 @@ type App struct {
 	token     *auth.PasetoAuth
 	routerApi *fiber.App
 	config    configs.Config
-	db        contracts.DataBase
+	db        *controllers.Dbontroller
+
+	ctx context.Context
 }
 
 const (
@@ -25,16 +28,18 @@ const (
 	typeBearer = "bearer"
 )
 
-func NewApp(config configs.Config, api *fiber.App) *App {
+func NewApp(config configs.Config, api *fiber.App) (*App, error) {
+
+	ctx := context.Background()
 
 	pasetoToken, err := auth.NewPasseto([]byte(config.TokenKey))
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
-	db, err := models2.NewPostgreSQL()
+	db, err := controllers.NewDbontroller(ctx)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	app := &App{
@@ -42,19 +47,45 @@ func NewApp(config configs.Config, api *fiber.App) *App {
 		routerApi: api,
 		config:    config,
 		db:        db,
+		ctx:       ctx,
 	}
 	app.SetApi()
-	return app
+	return app, nil
 }
 
+// Login godoc
+// @Summary      Login user
+// @Description  Login user and return pasetto tocken
+// @Tags         log in
+// @Accept       json
+// @Produce      json
+//
+// @Param        request  body  models.Credentials  true  "Sign in info"
+//
+// @Success      200
+// @Failure      400
+// @Failure      500
+//
+// @Router      /login [post]
 func (a *App) Login(c fiber.Ctx) error {
 	creds := new(models.Credentials)
-
 	if err := c.Bind().JSON(creds); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	//TODO: Implement login logic
+	hashPass, err := a.db.Interwiewers.GetPassHash(a.ctx, creds.Username)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	if hashPass == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON("You are not signed in")
+	}
+
+	if !crypto.CheckPasswordHash(creds.Password, hashPass) {
+		return c.Status(fiber.StatusUnauthorized).JSON("Invalid password")
+	}
 
 	pasetoToken, err := a.token.NewTocken(models.TockenData{
 		Subject:  "for user",
@@ -71,9 +102,22 @@ func (a *App) Login(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"token": pasetoToken})
-
 }
 
+// Register godoc
+// @Summary      Register user
+// @Description  Returns nil error of success
+// @Tags         sign in
+// @Accept       json
+// @Produce      json
+//
+// @Param        request  body  models.RegisterInfo  true  "Sign in info"
+//
+// @Success      200
+// @Failure      400
+// @Failure      500
+//
+// @Router      /register [post]
 func (a *App) Register(c fiber.Ctx) error {
 	creds := new(models.RegisterInfo)
 
@@ -85,7 +129,13 @@ func (a *App) Register(c fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
-	err = a.db.AddUser(creds.Username, hash)
+	err = a.db.Interwiewers.Update(a.ctx, &entities.Interviewer{
+		0,
+		creds.Username,
+		hash,
+		creds.Email,
+	})
+
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}

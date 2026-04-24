@@ -1,4 +1,4 @@
-package contracts
+package db
 
 import (
 	"Lab7/models"
@@ -6,23 +6,21 @@ import (
 )
 
 type Repository[T any] interface {
-	Create(ctx context.Context, item *T) error
+	Create(ctx context.Context) error
 	FindByID(ctx context.Context, id uint64) (*T, error)
 	Update(ctx context.Context, item *T) error
 	Delete(ctx context.Context, id uint64) error
 }
 
 type InterwiewerRepository interface {
-	Repository[models.Interviewer]
-	GetPassHash(context.Context) (string, error)
+	GetPassHash(name string) (string, error)
 }
 
 type ProblemsRepository interface {
-	Repository[models.InterwieweProblem]
-	GetByName(ctx context.Context, name string) (*models.InterwieweProblem, error)
+	GetByName(ctx context.Context, name string) (models.InterwieweProblem, error)
 	GetIdByName(ctx context.Context, name string) (uint64, error)
 }
 
 type CandidatesRepository interface {
-	Repository[models.Candidate]
+	GetByEmail(ctx context.Context, email string) (models.Candidate, error)
 }
