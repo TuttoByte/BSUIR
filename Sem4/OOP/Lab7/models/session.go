@@ -10,23 +10,25 @@ const (
 )
 
 type Session struct {
-	ID          uint64 `gorm:"primaryKey"`
-	candidate   Candidate
-	interwiewer Interviewer
+	ID            uint64 `gorm:"primaryKey"`
+	CandidateId   uint64
+	InterviewerId uint64
+	Candidate     Candidate   `json:"candidate" gorm:"foreignKey:CandidateId"`
+	Interwiewer   Interviewer `json:"interwiewer" gorm:"foreignKey:InterviewerId"`
 
-	problems []InterwieweProblem
+	Problems []InterwieweProblem `json:"problems" gorm:"many2many:session_problems"`
 
-	timeInfo   TimeInfo
-	isStarted  bool
+	TimeInfo   TimeInfo `json:"time_info" gorm:"serializer:json"`
+	IsStarted  bool
 	isExtended bool
 
-	result Result
+	Result Result `gorm:"serializer:json"`
 }
 
 type TimeInfo struct {
-	StartTime time.Time
-	EndTime   time.Time
-	Duration  time.Duration
+	StartTime time.Time     `json:"start_time"`
+	EndTime   time.Time     `json:"end_time"`
+	Duration  time.Duration `json:"duration"`
 }
 
 type Result struct {
@@ -37,33 +39,33 @@ type Result struct {
 
 func NewSession(candidate Candidate, interwiewer Interviewer) *Session {
 	return &Session{
-		candidate:   candidate,
-		interwiewer: interwiewer,
-		problems:    make([]InterwieweProblem, 0),
-		isStarted:   false,
+		Candidate:   candidate,
+		Interwiewer: interwiewer,
+		Problems:    make([]InterwieweProblem, 0),
+		IsStarted:   false,
 		isExtended:  false,
 	}
 }
 
 func (s *Session) Start() {
-	if s.isStarted {
+	if s.IsStarted {
 		return
 	}
-	s.isStarted = true
-	s.timeInfo.StartTime = time.Now()
+	s.IsStarted = true
+	s.TimeInfo.StartTime = time.Now()
 	return
 }
 
 func (s *Session) End() {
-	if !s.isStarted {
+	if !s.IsStarted {
 		return
 	}
-	s.timeInfo.EndTime = time.Now()
-	s.timeInfo.Duration = time.Since(s.timeInfo.StartTime)
+	s.TimeInfo.EndTime = time.Now()
+	s.TimeInfo.Duration = time.Since(s.TimeInfo.StartTime)
 }
 
-func (s *Session) IsStarted() bool {
-	return s.isStarted
+func (s *Session) IsActive() bool {
+	return s.IsStarted
 }
 
 func (s *Session) IsExtended() bool {
@@ -74,12 +76,12 @@ func (s *Session) AddProblems(additional []InterwieweProblem) {
 	if len(additional) > StandartProblemsAmount {
 		s.isExtended = true
 	}
-	s.problems = append(s.problems, additional...)
+	s.Problems = append(s.Problems, additional...)
 }
 
 func (s *Session) SetResult(result Result) {
-	s.result = result
+	s.Result = result
 }
 func (s *Session) GetResult() Result {
-	return s.result
+	return s.Result
 }

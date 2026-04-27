@@ -18,7 +18,9 @@ type App struct {
 	token     *auth.PasetoAuth
 	routerApi *fiber.App
 	config    configs.Config
-	db        *controllers.Dbontroller
+
+	db       *controllers.Dbontroller
+	promlems *controllers.ProblemsController
 
 	ctx context.Context
 }
@@ -42,12 +44,15 @@ func NewApp(config configs.Config, api *fiber.App) (*App, error) {
 		return nil, err
 	}
 
+	problems := controllers.NewProblemsController(db.Problems)
+
 	app := &App{
 		token:     pasetoToken,
 		routerApi: api,
 		config:    config,
 		db:        db,
 		ctx:       ctx,
+		promlems:  problems,
 	}
 	app.SetApi()
 	return app, nil
@@ -152,15 +157,6 @@ func (a *App) CheckAuth() fiber.Handler {
 
 		splitHeader := strings.Fields(authVal)
 
-		//if len(splitHeader) < 2 {
-		//	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
-		//}
-		//
-		//authType := strings.ToLower(splitHeader[0])
-		//if authType != typeBearer {
-		//	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
-		//}
-
 		claims, err := a.token.VerifyTocken(splitHeader[0])
 		if err != nil {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
@@ -178,6 +174,7 @@ func (a *App) SetApi() {
 	protectedApi := a.routerApi.Group("api", a.CheckAuth())
 	protectedApiSession := protectedApi.Group("session")
 	protectedApiCandidates := protectedApi.Group("candidates")
+	protectedApiProblmes := protectedApi.Group("problems")
 
 	//api is protected group
 	protectedApi.Get("/account", func(c fiber.Ctx) error {
@@ -199,8 +196,20 @@ func (a *App) SetApi() {
 	})
 
 	protectedApiSession.Post("/create", a.CreateSession)
+	protectedApiSession.Get("/all", a.GetAllSessions)
+	protectedApiSession.Post("/get", a.GetSessionById)
+	protectedApiSession.Delete("/:id", a.DeleteSessionById)
 
-	protectedApiCandidates.Post("/create", a.AddCandidateHandler)
+	protectedApiSession.Post("/:id/start", a.StartSession)
+	protectedApiSession.Post("/:id/stop", a.StopSession)
+
+	protectedApiCandidates.Post("/add", a.AddCandidateHandler)
+	protectedApiCandidates.Delete("/:id", a.DeleteCandidateHandler)
+
+	protectedApiProblmes.Post("/add", a.AddProblemHandler)
+	protectedApiProblmes.Delete("/:id", a.DeleteProblemHandler)
+	protectedApiProblmes.Get("/all", a.GetAllProblems)
+	protectedApiProblmes.Get("/:id", a.GetProblemByIdHandler)
 
 }
 

@@ -30,7 +30,7 @@ func (i *InterwieController) GetSessions() []*models.Session {
 func (i *InterwieController) GetActiveSessions() []*models.Session {
 	activeSessions := make([]*models.Session, 0)
 	for _, session := range i.sessions {
-		if session.IsStarted() {
+		if session.IsActive() {
 		}
 		activeSessions = append(activeSessions, session)
 	}
@@ -48,4 +48,8 @@ func (i *InterwieController) AddSession(info models.SessionInfo, ctx context.Con
 	session := models.NewSession(candidate, interwiewer)
 	i.sessions = append(i.sessions, session)
 	return nil
+}
+
+func (i *InterwieController) SetSessionResult() {
+
 }

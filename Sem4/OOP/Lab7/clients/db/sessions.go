@@ -28,3 +28,9 @@ func (s *SessionDB) GetAllActiveSessions(ctx context.Context) ([]models.Session,
 	}
 	return sessions, nil
 }
+
+func (s *SessionDB) GetAll() ([]models.Session, error) {
+	var sessions []models.Session
+	s.db.Preload("Candidate").Preload("Interviewer").Find(&sessions)
+	return sessions, nil
+}

@@ -41,3 +41,9 @@ func (p *ProblemsDB) GetIdByName(ctx context.Context, name string) (models.Inter
 	}
 	return user, nil
 }
+
+func (p *ProblemsDB) GetAll() ([]models.InterwieweProblem, error) {
+	var problems []models.InterwieweProblem
+	p.db.Find(&problems)
+	return problems, nil
+}

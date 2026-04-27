@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v3"
 	"net/http"
+	"strconv"
 )
 
 // CreateSession (в защищённой группе /api)
@@ -48,20 +49,18 @@ func (a *App) CreateSession(c fiber.Ctx) error {
 }
 
 // GetAllSessions (в защищённой группе /api/session)
-// @Summary Добавить кандидата (требует PASETO токен)
+// @Summary Получить все сессии (требует PASETO токен)
 // @Security PASETOAuth
-// @Description Создаёт кандидата в защищённой зоне
+// @Description Получить все сессии в защищённой зоне
 // @Tags session
 // @Accept json
 // @Produce json
-// @Param body body models.AnyUserInfo true "Candidate info"
 // @Success 201 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /api/session/getall [get]
+// @Router /api/session/all [get]
 func (a *App) GetAllSessions(c fiber.Ctx) error {
-	ctx := context.Background()
-	sessions, err := a.db.Sessions.GetAllActiveSessions(ctx)
+	sessions, err := a.db.Sessions.GetAll()
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(err)
 	}
@@ -69,17 +68,17 @@ func (a *App) GetAllSessions(c fiber.Ctx) error {
 }
 
 // GetSessionById (в защищённой группе /api/session)
-// @Summary Добавить кандидата (требует PASETO токен)
+// @Summary Получить сессию(требует PASETO токен)
 // @Security PASETOAuth
-// @Description Создаёт кандидата в защищённой зоне
+// @Description Получить сесси.ю в защищённой зоне
 // @Tags session
 // @Accept json
 // @Produce json
-// @Param body body models.AnyUserInfo true "Candidate info"
+// @Param body body models.IdSetter true "Session id"
 // @Success 201 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /api/candidates [post]
+// @Router /api/session/get [post]
 func (a *App) GetSessionById(c fiber.Ctx) error {
 	ctx := context.Background()
 	idSetter := new(models.IdSetter)
@@ -94,18 +93,17 @@ func (a *App) GetSessionById(c fiber.Ctx) error {
 	return c.JSON(session)
 }
 
-// DeleteSessionById (в защищённой группе /api)
-// @Summary Добавить кандидата (требует PASETO токен)
+// DeleteSessionById (в защищённой группе /api/candidates/:id)
+// @Summary Удалить сессию (требует PASETO токен)
 // @Security PASETOAuth
-// @Description Создаёт кандидата в защищённой зоне
+// @Description Удаляет сессию  по ID в защищённой зоне
 // @Tags session
-// @Accept json
 // @Produce json
-// @Param body body models.AnyUserInfo true "Candidate info"
-// @Success 201 {object} map[string]string
+// @Param id path int true "Candidate ID"
+// @Success 200 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /api/candidates [post]
+// @Router /api/session/{id} [delete]
 func (a *App) DeleteSessionById(c fiber.Ctx) error {
 	ctx := context.Background()
 	idSetter := new(models.IdSetter)
@@ -118,4 +116,63 @@ func (a *App) DeleteSessionById(c fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(err)
 	}
 	return nil
+}
+
+// StartSession (в защищённой группе /api/session)
+// @Summary Начать сессию
+// @Security PASETOAuth
+// @Tags session
+// @Produce json
+// @Param id path int true "Session ID"
+// @Success 200 {string} string
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /api/session/{id}/start [post]
+func (a *App) StartSession(c fiber.Ctx) error {
+	ctx := context.Background()
+
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON("invalid id")
+	}
+
+	session, err := a.db.Sessions.FindByID(ctx, uint64(id))
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON("invalid session id type")
+	}
+	if session.IsActive() {
+		return c.Status(http.StatusInternalServerError).JSON("session is already started")
+	}
+	session.Start()
+	return c.Status(http.StatusOK).JSON(fmt.Sprintf("Session is startes id = %d", session.ID))
+}
+
+// StopSession (в защищённой группе /api/session)
+// @Summary Остановить сессию
+// @Security PASETOAuth
+// @Tags session
+// @Produce json
+// @Param id path int true "Session ID"
+// @Success 200 {string} string
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /api/session/{id}/stop [post]
+func (a *App) StopSession(c fiber.Ctx) error {
+	ctx := context.Background()
+
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON("invalid id")
+	}
+
+	session, err := a.db.Sessions.FindByID(ctx, uint64(id))
+
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON("invalid session id type")
+	}
+	if !session.IsActive() {
+		return c.Status(http.StatusInternalServerError).JSON("session is already stopped")
+	}
+	session.End()
+	return c.Status(http.StatusOK).JSON(fmt.Sprintf("Session is ended id = %d", session.ID))
 }

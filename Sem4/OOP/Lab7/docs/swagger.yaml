@@ -1,0 +1,515 @@
+definitions:
+  models.AnyUserInfo:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Credentials:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.IdSetter:
+    properties:
+      id:
+        type: integer
+    type: object
+  models.InterwieweProblem:
+    properties:
+      grade:
+        type: integer
+      id:
+        type: integer
+      text:
+        type: string
+      theme:
+        type: string
+    type: object
+  models.RegisterInfo:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.SessionRegisterInfo:
+    properties:
+      candidate_id:
+        type: integer
+      interwiwer_id:
+        type: integer
+    type: object
+info:
+  contact: {}
+  title: Interwier
+  version: "1.0"
+paths:
+  /api/candidates/{id}:
+    delete:
+      description: Удаляет кандидата по ID в защищённой зоне
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Удалить кандидата (требует PASETO токен)
+      tags:
+      - candidates
+  /api/candidates/add:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт кандидата в защищённой зоне
+      parameters:
+      - description: Candidate info
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.AnyUserInfo'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Добавить кандидата (требует PASETO токен)
+      tags:
+      - candidates
+  /api/problems/{id}:
+    delete:
+      description: Удаляет задачу по ID
+      parameters:
+      - description: Problem ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Problem deleted
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - PASETOAuth: []
+      summary: Удалить задачу (требует PASETO токен)
+      tags:
+      - problems
+    get:
+      description: Возвращает задачу по её ID
+      parameters:
+      - description: Problem ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.InterwieweProblem'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - PASETOAuth: []
+      summary: Получить задачу по ID (требует PASETO токен)
+      tags:
+      - problems
+  /api/problems/add:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт новую задачу для интервью
+      parameters:
+      - description: Problem data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.InterwieweProblem'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Problem added
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - PASETOAuth: []
+      summary: Добавить задачу (требует PASETO токен)
+      tags:
+      - problems
+  /api/problems/all:
+    get:
+      description: Возвращает список всех задач
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.InterwieweProblem'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - PASETOAuth: []
+      summary: Получить все задачи (требует PASETO токен)
+      tags:
+      - problems
+  /api/session/{id}:
+    delete:
+      description: Удаляет сессию  по ID в защищённой зоне
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Удалить сессию (требует PASETO токен)
+      tags:
+      - session
+  /api/session/all:
+    get:
+      consumes:
+      - application/json
+      description: Получить все сессии в защищённой зоне
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Получить все сессии (требует PASETO токен)
+      tags:
+      - session
+  /api/session/create:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт сессию в защищённой зоне
+      parameters:
+      - description: Session info
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.SessionRegisterInfo'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: создать сессию (требует PASETO токен)
+      tags:
+      - session
+  /api/session/get:
+    post:
+      consumes:
+      - application/json
+      description: Получить сесси.ю в защищённой зоне
+      parameters:
+      - description: Session id
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.IdSetter'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Получить сессию(требует PASETO токен)
+      tags:
+      - session
+  /api/session/start:
+    post:
+      consumes:
+      - application/json
+      description: Начать сессию в защищённой зоне
+      parameters:
+      - description: Session id
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.IdSetter'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Начать сессию(требует PASETO токен)
+      tags:
+      - session
+  /api/session/stop:
+    post:
+      consumes:
+      - application/json
+      description: Остановить сессию в защищённой зоне
+      parameters:
+      - description: Session id
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.IdSetter'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Остановить сессию(требует PASETO токен)
+      tags:
+      - session
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login user and return pasetto tocken
+      parameters:
+      - description: Sign in info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.Credentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Login user
+      tags:
+      - log in
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Returns nil error of success
+      parameters:
+      - description: Sign in info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Register user
+      tags:
+      - sign in
+securityDefinitions:
+  PASETOAuth:
+    description: Введите "Bearer <PASETO токен>". Получите токен на /login и прикрепите
+      его.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
