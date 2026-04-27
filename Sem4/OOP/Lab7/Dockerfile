@@ -1,11 +1,18 @@
-FROM golang:1.25.3-bookworm AS builder
+FROM golang:1.26.2-bookworm AS builder
 
 WORKDIR /app
+
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+
 COPY . .
 
-RUN go build -o server
+RUN CGO_ENABLED=0 GOOS=linux go build -o /server .
 
 FROM alpine
 WORKDIR /app
 COPY --from=builder server server
-CMD["./server"]
+COPY --from=builder /app/.env .env
+CMD ["./server"]

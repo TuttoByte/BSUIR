@@ -10,6 +10,7 @@ const (
 )
 
 type Session struct {
+	ID          uint64 `gorm:"primaryKey"`
 	candidate   Candidate
 	interwiewer Interviewer
 
@@ -18,12 +19,20 @@ type Session struct {
 	timeInfo   TimeInfo
 	isStarted  bool
 	isExtended bool
+
+	result Result
 }
 
 type TimeInfo struct {
 	StartTime time.Time
 	EndTime   time.Time
 	Duration  time.Duration
+}
+
+type Result struct {
+	HardSkils string `json:"hard_skils"`
+	SoftSkils string `json:"soft_skils"`
+	ToHire    string `json:"to_hire"`
 }
 
 func NewSession(candidate Candidate, interwiewer Interviewer) *Session {
@@ -66,4 +75,11 @@ func (s *Session) AddProblems(additional []InterwieweProblem) {
 		s.isExtended = true
 	}
 	s.problems = append(s.problems, additional...)
+}
+
+func (s *Session) SetResult(result Result) {
+	s.result = result
+}
+func (s *Session) GetResult() Result {
+	return s.result
 }

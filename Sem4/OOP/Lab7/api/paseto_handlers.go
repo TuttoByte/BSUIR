@@ -152,16 +152,16 @@ func (a *App) CheckAuth() fiber.Handler {
 
 		splitHeader := strings.Fields(authVal)
 
-		if len(splitHeader) < 2 {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
-		}
+		//if len(splitHeader) < 2 {
+		//	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
+		//}
+		//
+		//authType := strings.ToLower(splitHeader[0])
+		//if authType != typeBearer {
+		//	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
+		//}
 
-		authType := strings.ToLower(splitHeader[0])
-		if authType != typeBearer {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
-		}
-
-		claims, err := a.token.VerifyTocken(splitHeader[1])
+		claims, err := a.token.VerifyTocken(splitHeader[0])
 		if err != nil {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
 		}
@@ -176,6 +176,8 @@ func (a *App) SetApi() {
 	a.routerApi.Post("/register", a.Register)
 
 	protectedApi := a.routerApi.Group("api", a.CheckAuth())
+	protectedApiSession := protectedApi.Group("session")
+	protectedApiCandidates := protectedApi.Group("candidates")
 
 	//api is protected group
 	protectedApi.Get("/account", func(c fiber.Ctx) error {
@@ -195,7 +197,10 @@ func (a *App) SetApi() {
 		return c.SendString(owner + role + footer)
 
 	})
-	protectedApi.Post("/candidates", a.AddCandidateHandler)
+
+	protectedApiSession.Post("/create", a.CreateSession)
+
+	protectedApiCandidates.Post("/create", a.AddCandidateHandler)
 
 }
 

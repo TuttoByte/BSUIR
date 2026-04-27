@@ -12,5 +12,24 @@ services:
 
     volumes:
       - pg-data-local:/var/lib/postgresql/data_local
+
+
+  interwise:
+    container_name: inteerw
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+        - "8091:8091"
+    volumes:
+      - ./docs:/app/docs
+    environment:
+      SWAGGER_JSON: /home/udainoko/Documents/BSUIR/Sem4/OOP/Lab7/docs/swagger.json
+    env_file:
+        - .env
+    depends_on:
+        - postgres
+    restart: always
+
 volumes:
     pg-data-local:

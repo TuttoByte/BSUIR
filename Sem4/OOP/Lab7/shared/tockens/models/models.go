@@ -41,3 +41,13 @@ type AnyUserInfo struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 }
+
+// Maybe fix
+type SessionRegisterInfo struct {
+	CandidateId  uint64 `json:"candidate_id"`
+	InterwiwerId uint64 `json:"interwiwer_id"`
+}
+
+type IdSetter struct {
+	Id uint64 `json:"id"`
+}

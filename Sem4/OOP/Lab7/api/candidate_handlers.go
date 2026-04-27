@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-// AddCandidateHandler (в защищённой группе /api)
+// AddCandidateHandler (в защищённой группе /api/candidates/create)
 // @Summary Добавить кандидата (требует PASETO токен)
 // @Security PASETOAuth
 // @Description Создаёт кандидата в защищённой зоне
@@ -18,7 +18,7 @@ import (
 // @Success 201 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /api/candidates [post]
+// @Router /api/candidates/create/ [post]
 func (a *App) AddCandidateHandler(c fiber.Ctx) error {
 	creds := new(models.AnyUserInfo)
 	if err := c.Bind().JSON(creds); err != nil {
@@ -29,14 +29,14 @@ func (a *App) AddCandidateHandler(c fiber.Ctx) error {
 	fmt.Println(creds)
 	fmt.Println(creds)
 
-	err := a.db.Candidates.Update(a.ctx, &models2.Candidate{
-		ID:    0,
+	candidate := &models2.Candidate{
 		Name:  creds.Username,
 		Email: creds.Email,
-		//Grade: models2.InterviewGrade{},
-	})
+	}
+
+	err := a.db.Candidates.Update(a.ctx, candidate)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{})
 	}
-	return c.Status(fiber.StatusCreated).JSON("User successfully added")
+	return c.Status(fiber.StatusCreated).JSON(fmt.Sprintf("User successfully added with id = %d", candidate.ID))
 }
