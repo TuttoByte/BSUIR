@@ -63,6 +63,7 @@ func (s *Session) End() {
 	if !s.IsStarted {
 		return
 	}
+	s.IsStarted = false
 	s.TimeInfo.EndTime = time.Now()
 	s.TimeInfo.Duration = time.Since(s.TimeInfo.StartTime)
 }

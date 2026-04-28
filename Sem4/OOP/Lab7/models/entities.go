@@ -48,3 +48,8 @@ type AddProblemsInfo struct {
 	SessionId uint64   `json:"session_id"`
 	Problems  []uint64 `json:"problems"`
 }
+
+type ResultIndo struct {
+	SessionId uint64 `json:"session_id"`
+	Result
+}

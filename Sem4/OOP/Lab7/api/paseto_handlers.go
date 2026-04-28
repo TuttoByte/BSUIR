@@ -209,6 +209,7 @@ func (a *App) SetApi() {
 	protectedApiSession.Post("/get", a.GetSessionById)
 	protectedApiSession.Delete("/:id", a.DeleteSessionById)
 	protectedApiSession.Post("/problems", a.AddProblemsToSession)
+	protectedApiSession.Post("/result", a.SetResultHandler)
 
 	protectedApiSession.Post("/:id/start", a.StartSession)
 	protectedApiSession.Post("/:id/stop", a.StopSession)

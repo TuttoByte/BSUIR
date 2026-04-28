@@ -374,7 +374,7 @@
                 "summary": "создать сессию (требует PASETO токен)",
                 "parameters": [
                     {
-                        "description": "Session info",
+                        "description": "session info",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -434,7 +434,7 @@
                 "summary": "Получить сессию(требует PASETO токен)",
                 "parameters": [
                     {
-                        "description": "Session id",
+                        "description": "session id",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -490,12 +490,50 @@
                 "summary": "Добавить задачи в сессию",
                 "parameters": [
                     {
-                        "description": "Session problems info",
+                        "description": "session problems info",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/models.AddProblemsInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/session/result": {
+            "post": {
+                "security": [
+                    {
+                        "PASETOAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Добавть результат сесии",
+                "parameters": [
+                    {
+                        "description": "session result info",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ResultIndo"
                         }
                     }
                 ],
@@ -565,7 +603,7 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Session ID",
+                        "description": "session ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -610,7 +648,7 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Session ID",
+                        "description": "session ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -657,7 +695,7 @@
                 "summary": "Создать времной слот (требует PASETO токен)",
                 "parameters": [
                     {
-                        "description": "Session info",
+                        "description": "session info",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -732,7 +770,7 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Session ID",
+                        "description": "session ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -777,7 +815,7 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Session ID",
+                        "description": "session ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -972,6 +1010,23 @@
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ResultIndo": {
+            "type": "object",
+            "properties": {
+                "hard_skils": {
+                    "type": "string"
+                },
+                "session_id": {
+                    "type": "integer"
+                },
+                "soft_skils": {
+                    "type": "string"
+                },
+                "to_hire": {
                     "type": "string"
                 }
             }

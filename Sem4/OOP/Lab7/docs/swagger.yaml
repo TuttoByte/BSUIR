@@ -60,6 +60,17 @@ definitions:
       username:
         type: string
     type: object
+  models.ResultIndo:
+    properties:
+      hard_skils:
+        type: string
+      session_id:
+        type: integer
+      soft_skils:
+        type: string
+      to_hire:
+        type: string
+    type: object
   models.SessionRegisterInfo:
     properties:
       candidate_id:
@@ -286,7 +297,7 @@ paths:
   /api/session/{id}/start:
     post:
       parameters:
-      - description: Session ID
+      - description: session ID
         in: path
         name: id
         required: true
@@ -314,7 +325,7 @@ paths:
   /api/session/{id}/stop:
     post:
       parameters:
-      - description: Session ID
+      - description: session ID
         in: path
         name: id
         required: true
@@ -376,7 +387,7 @@ paths:
       - application/json
       description: Создаёт сессию в защищённой зоне
       parameters:
-      - description: Session info
+      - description: session info
         in: body
         name: body
         required: true
@@ -414,7 +425,7 @@ paths:
       - application/json
       description: Получить сесси.ю в защищённой зоне
       parameters:
-      - description: Session id
+      - description: session id
         in: body
         name: body
         required: true
@@ -449,7 +460,7 @@ paths:
   /api/session/problems:
     post:
       parameters:
-      - description: Session problems info
+      - description: session problems info
         in: body
         name: body
         required: true
@@ -467,6 +478,29 @@ paths:
       security:
       - PASETOAuth: []
       summary: Добавить задачи в сессию
+      tags:
+      - session
+  /api/session/result:
+    post:
+      parameters:
+      - description: session result info
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.ResultIndo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - PASETOAuth: []
+      summary: Добавть результат сесии
       tags:
       - session
   /api/slots/{id}:
@@ -494,7 +528,7 @@ paths:
   /api/slots/{id}/book:
     post:
       parameters:
-      - description: Session ID
+      - description: session ID
         in: path
         name: id
         required: true
@@ -522,7 +556,7 @@ paths:
   /api/slots/{id}/unbook:
     post:
       parameters:
-      - description: Session ID
+      - description: session ID
         in: path
         name: id
         required: true
@@ -552,7 +586,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Session info
+      - description: session info
         in: body
         name: body
         required: true

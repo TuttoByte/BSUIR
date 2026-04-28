@@ -521,6 +521,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/session/result": {
+            "post": {
+                "security": [
+                    {
+                        "PASETOAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Добавть результат сесии",
+                "parameters": [
+                    {
+                        "description": "session result info",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ResultIndo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/session/{id}": {
             "delete": {
                 "security": [
@@ -981,6 +1019,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ResultIndo": {
+            "type": "object",
+            "properties": {
+                "hard_skils": {
+                    "type": "string"
+                },
+                "session_id": {
+                    "type": "integer"
+                },
+                "soft_skils": {
+                    "type": "string"
+                },
+                "to_hire": {
                     "type": "string"
                 }
             }

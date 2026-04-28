@@ -4,6 +4,7 @@ import (
 	models2 "Lab7/models"
 	"Lab7/shared/tockens/models"
 	"context"
+	"fmt"
 	"github.com/gofiber/fiber/v3"
 	"net/http"
 	"strconv"
@@ -181,4 +182,30 @@ func (a *App) AddProblemsToSession(c fiber.Ctx) error {
 	}
 
 	return c.Status(http.StatusOK).JSON("session problems added")
+}
+
+// SetResultHandler (в защищённой группе /api/session)
+// @Summary Добавть результат сесии
+// @Security PASETOAuth
+// @Tags session
+// @Produce json
+// @Param body body models.ResultIndo true "session result info"
+// @Success 200
+// @Failure 400
+// @Failure 500
+// @Router /api/session/result [post]
+func (a *App) SetResultHandler(c fiber.Ctx) error {
+	info := new(models2.ResultIndo)
+	if err := c.Bind().JSON(info); err != nil {
+		return c.Status(http.StatusBadRequest).JSON("invalid info")
+	}
+
+	fmt.Println(info)
+	fmt.Println(info)
+	fmt.Println(info)
+	err := a.session.SetSessionResult(info)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(err)
+	}
+	return c.Status(http.StatusOK).JSON("session results set")
 }

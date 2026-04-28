@@ -5,6 +5,7 @@ import (
 	"Lab7/models"
 	"context"
 	"errors"
+	"fmt"
 )
 
 type SessionController struct {
@@ -107,6 +108,29 @@ func (s *SessionController) AddProblems(ids []uint64, sessionId uint64) error {
 	}
 	session.Problems = problems
 	err = s.session.Update(ctx, &session)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SessionController) SetSessionResult(info *models.ResultIndo) error {
+	session, err := s.GetSessionById(info.SessionId)
+	if err != nil {
+		return err
+	}
+
+	if session.IsActive() {
+		return errors.New("session must be ended")
+	}
+
+	session.Result = models.Result{
+		HardSkils: info.HardSkils,
+		SoftSkils: info.SoftSkils,
+		ToHire:    info.ToHire,
+	}
+	fmt.Println(session)
+	err = s.session.Update(context.Background(), &session)
 	if err != nil {
 		return err
 	}
