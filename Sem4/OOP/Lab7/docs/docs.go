@@ -15,38 +15,102 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/candidates/add": {
+        "/api/candidates/{candidateId}/slots/{slotId}/book": {
             "post": {
                 "security": [
                     {
                         "PASETOAuth": []
                     }
                 ],
-                "description": "Создаёт кандидата в защищённой зоне",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Кандидат бронирует слот по его ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "candidates"
+                    "slots"
                 ],
-                "summary": "Добавить кандидата (требует PASETO токен)",
+                "summary": "Забронировать слот",
                 "parameters": [
                     {
-                        "description": "Candidate info",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.AnyUserInfo"
-                        }
+                        "type": "integer",
+                        "description": "Candidate ID",
+                        "name": "CandidateId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Slot ID",
+                        "name": "SlotId",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/candidates/{candidateId}/slots/{slotId}/unbook": {
+            "post": {
+                "security": [
+                    {
+                        "PASETOAuth": []
+                    }
+                ],
+                "description": "Кандидат отменяет бронирование слота по его ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "slots"
+                ],
+                "summary": "Отменить бронирование слота",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Candidate ID",
+                        "name": "CandidateId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Slot ID",
+                        "name": "SlotId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -106,6 +170,59 @@ const docTemplate = `{
                             "type": "object",
                             "additionalProperties": {
                                 "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/candidates/{id}/slots": {
+            "get": {
+                "description": "Возвращает список доступных слотов для записи по ID интервьюера",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "slots"
+                ],
+                "summary": "Получить доступные слоты интервьюера",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Interviewer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/models.AvailabilitySlot"
+                                }
                             }
                         }
                     },
@@ -872,7 +989,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Credentials"
+                            "$ref": "#/definitions/models.LoginInfo"
                         }
                     }
                 ],
@@ -942,20 +1059,12 @@ const docTemplate = `{
                 }
             }
         },
-        "models.AnyUserInfo": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
         "models.AvailabilitySlot": {
             "type": "object",
             "properties": {
+                "candidate_id": {
+                    "type": "integer"
+                },
                 "end_time": {
                     "type": "string"
                 },
@@ -969,17 +1078,6 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "start_time": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Credentials": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }
@@ -1009,6 +1107,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.LoginInfo": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.RegisterInfo": {
             "type": "object",
             "properties": {
@@ -1016,6 +1125,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 },
                 "username": {

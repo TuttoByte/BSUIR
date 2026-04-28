@@ -7,10 +7,10 @@ import (
 )
 
 type AvalTimeController struct {
-	avalTime *db.AvalabilytyDB
+	avalTime db.SlotRepository
 }
 
-func NewAvalTimeController(avalTime *db.AvalabilytyDB) *AvalTimeController {
+func NewAvalTimeController(avalTime db.SlotRepository) *AvalTimeController {
 	return &AvalTimeController{
 		avalTime: avalTime,
 	}

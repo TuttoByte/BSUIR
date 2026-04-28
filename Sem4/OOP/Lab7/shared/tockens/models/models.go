@@ -28,8 +28,15 @@ type TockenData struct {
 }
 
 type Credentials struct {
-	Password string `json:"password"`
 	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	Role     string `json:"role"`
+}
+
+type LoginInfo struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type RegisterInfo struct {

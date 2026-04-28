@@ -8,15 +8,10 @@ definitions:
       session_id:
         type: integer
     type: object
-  models.AnyUserInfo:
-    properties:
-      email:
-        type: string
-      username:
-        type: string
-    type: object
   models.AvailabilitySlot:
     properties:
+      candidate_id:
+        type: integer
       end_time:
         type: string
       id:
@@ -26,13 +21,6 @@ definitions:
       is_booked:
         type: boolean
       start_time:
-        type: string
-    type: object
-  models.Credentials:
-    properties:
-      password:
-        type: string
-      username:
         type: string
     type: object
   models.IdSetter:
@@ -51,11 +39,20 @@ definitions:
       theme:
         type: string
     type: object
+  models.LoginInfo:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   models.RegisterInfo:
     properties:
       email:
         type: string
       password:
+        type: string
+      role:
         type: string
       username:
         type: string
@@ -83,6 +80,86 @@ info:
   title: Interwier
   version: "1.0"
 paths:
+  /api/candidates/{candidateId}/slots/{slotId}/book:
+    post:
+      description: Кандидат бронирует слот по его ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: CandidateId
+        required: true
+        type: integer
+      - description: Slot ID
+        in: path
+        name: SlotId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Забронировать слот
+      tags:
+      - slots
+  /api/candidates/{candidateId}/slots/{slotId}/unbook:
+    post:
+      description: Кандидат отменяет бронирование слота по его ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: CandidateId
+        required: true
+        type: integer
+      - description: Slot ID
+        in: path
+        name: SlotId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - PASETOAuth: []
+      summary: Отменить бронирование слота
+      tags:
+      - slots
   /api/candidates/{id}:
     delete:
       description: Удаляет кандидата по ID в защищённой зоне
@@ -118,27 +195,26 @@ paths:
       summary: Удалить кандидата (требует PASETO токен)
       tags:
       - candidates
-  /api/candidates/add:
-    post:
-      consumes:
-      - application/json
-      description: Создаёт кандидата в защищённой зоне
+  /api/candidates/{id}/slots:
+    get:
+      description: Возвращает список доступных слотов для записи по ID интервьюера
       parameters:
-      - description: Candidate info
-        in: body
-        name: body
+      - description: Interviewer ID
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/models.AnyUserInfo'
+        type: integer
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            items:
+              items:
+                $ref: '#/definitions/models.AvailabilitySlot'
+              type: array
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -151,11 +227,9 @@ paths:
             additionalProperties:
               type: string
             type: object
-      security:
-      - PASETOAuth: []
-      summary: Добавить кандидата (требует PASETO токен)
+      summary: Получить доступные слоты интервьюера
       tags:
-      - candidates
+      - slots
   /api/problems/{id}:
     delete:
       description: Удаляет задачу по ID
@@ -617,7 +691,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/models.Credentials'
+          $ref: '#/definitions/models.LoginInfo'
       produces:
       - application/json
       responses:

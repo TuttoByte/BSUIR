@@ -7,10 +7,10 @@ import (
 )
 
 type ProblemsController struct {
-	Problems *db.ProblemsDB
+	Problems db.ProblemsRepository
 }
 
-func NewProblemsController(problems *db.ProblemsDB) *ProblemsController {
+func NewProblemsController(problems db.ProblemsRepository) *ProblemsController {
 	return &ProblemsController{
 		Problems: problems,
 	}

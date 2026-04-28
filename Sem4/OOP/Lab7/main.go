@@ -18,6 +18,7 @@ import (
 // @name Authorization
 // @description Введите "Bearer <PASETO токен>". Получите токен на /login и прикрепите его.
 func main() {
+
 	err := godotenv.Load()
 	if err != nil {
 		panic("Error loading .env file")

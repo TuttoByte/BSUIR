@@ -6,20 +6,15 @@ import (
 )
 
 type Dbontroller struct {
-	Candidates   *db.CandidatesDB
-	Interwiewers *db.InterwiewerDB
-	Problems     *db.ProblemsDB
-	Sessions     *db.SessionDB
-	Avalavility  *db.AvalabilytyDB
+	Users       db.UserRepository
+	Problems    db.ProblemsRepository
+	Sessions    db.SessionRepository
+	Avalavility db.SlotRepository
 }
 
 func NewDbontroller(ctx context.Context) (*Dbontroller, error) {
-	candidate, err := db.NewCandidatesDB(ctx)
-	if err != nil {
-		return nil, err
-	}
 
-	interwiewer, err := db.NewInterwiewerDB(ctx)
+	users, err := db.NewUsersDB(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -39,11 +34,7 @@ func NewDbontroller(ctx context.Context) (*Dbontroller, error) {
 		return nil, err
 	}
 
-	err = candidate.Create(ctx)
-	if err != nil {
-		return nil, err
-	}
-	err = interwiewer.Create(ctx)
+	err = users.Create(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -61,11 +52,10 @@ func NewDbontroller(ctx context.Context) (*Dbontroller, error) {
 	}
 
 	return &Dbontroller{
-		Candidates:   candidate,
-		Interwiewers: interwiewer,
-		Problems:     problems,
-		Sessions:     sessions,
-		Avalavility:  aval,
+		Users:       users,
+		Problems:    problems,
+		Sessions:    sessions,
+		Avalavility: aval,
 	}, nil
 
 }

@@ -1,43 +1,10 @@
 package api
 
 import (
-	models2 "Lab7/models"
-	"Lab7/shared/tockens/models"
 	"context"
-	"fmt"
 	"github.com/gofiber/fiber/v3"
 	"strconv"
 )
-
-// AddCandidateHandler (в защищённой группе /api/candidates/create)
-// @Summary Добавить кандидата (требует PASETO токен)
-// @Security PASETOAuth
-// @Description Создаёт кандидата в защищённой зоне
-// @Tags candidates
-// @Accept json
-// @Produce json
-// @Param body body models.AnyUserInfo true "Candidate info"
-// @Success 201 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /api/candidates/add [post]
-func (a *App) AddCandidateHandler(c fiber.Ctx) error {
-	creds := new(models.AnyUserInfo)
-	if err := c.Bind().JSON(creds); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{})
-	}
-
-	candidate := &models2.Candidate{
-		Name:  creds.Username,
-		Email: creds.Email,
-	}
-
-	err := a.db.Candidates.Update(a.ctx, candidate)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{})
-	}
-	return c.Status(fiber.StatusCreated).JSON(fmt.Sprintf("User successfully added with id = %d", candidate.ID))
-}
 
 // DeleteCandidateHandler (в защищённой группе /api/candidates/:id)
 // @Summary Удалить кандидата (требует PASETO токен)
@@ -57,9 +24,95 @@ func (a *App) DeleteCandidateHandler(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{})
 	}
 
-	err = a.db.Candidates.Delete(ctx, uint64(id))
+	err = a.db.Users.Delete(ctx, uint64(id))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{})
 	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{})
+}
+
+// GetAvalableSlotsHandler возвращает доступные слоты интервьюера
+// @Summary Получить доступные слоты интервьюера
+// @Description Возвращает список доступных слотов для записи по ID интервьюера
+// @Tags slots
+// @Produce json
+// @Param id path int true "Interviewer ID"
+// @Success 200 {array} []models.AvailabilitySlot
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /api/candidates/{id}/slots [get]
+func (a *App) GetAvalableSlotsHandler(c fiber.Ctx) error {
+
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{})
+	}
+
+	slots, err := a.candidates.GetSlostsByInterwiver(uint64(id))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON(slots)
+}
+
+// CandidateBookSlotHandler бронирует слот для кандидата
+// @Summary Забронировать слот
+// @Security PASETOAuth
+// @Description Кандидат бронирует слот по его ID
+// @Tags slots
+// @Produce json
+// @Param CandidateId path int true "Candidate ID"
+// @Param SlotId path int true "Slot ID"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /api/candidates/{candidateId}/slots/{slotId}/book [post]
+func (a *App) CandidateBookSlotHandler(c fiber.Ctx) error {
+
+	userId, err := strconv.Atoi(c.Params("CandidateId"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{})
+	}
+
+	slotId, err := strconv.Atoi(c.Params("SlotId"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{})
+	}
+
+	err = a.candidates.BookSlot(uint64(userId), uint64(slotId))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON("slot is booked")
+}
+
+// CandidateUnbookSlotHandler отменяет бронирование слота
+// @Summary Отменить бронирование слота
+// @Security PASETOAuth
+// @Description Кандидат отменяет бронирование слота по его ID
+// @Tags slots
+// @Produce json
+// @Param CandidateId path int true "Candidate ID"
+// @Param SlotId path int true "Slot ID"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /api/candidates/{candidateId}/slots/{slotId}/unbook [post]
+func (a *App) CandidateUnbookSlotHandler(c fiber.Ctx) error {
+
+	userId, err := strconv.Atoi(c.Params("CandidateId"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{})
+	}
+
+	slotId, err := strconv.Atoi(c.Params("SlotId"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{})
+	}
+
+	err = a.candidates.UnbookSlot(uint64(userId), uint64(slotId))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON("slot is booked")
 }

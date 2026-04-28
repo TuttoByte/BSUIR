@@ -19,10 +19,11 @@ type App struct {
 	routerApi *fiber.App
 	config    configs.Config
 
-	db       *controllers.Dbontroller
-	promlems *controllers.ProblemsController
-	slots    *controllers.AvalTimeController
-	session  *controllers.SessionController
+	db         *controllers.Dbontroller
+	promlems   controllers.ProblemControllerable
+	slots      controllers.SlotControllerable
+	session    controllers.SessionControllerable
+	candidates controllers.CandidateControllerable
 
 	ctx context.Context
 }
@@ -52,15 +53,18 @@ func NewApp(config configs.Config, api *fiber.App) (*App, error) {
 
 	session := controllers.NewSessionController(db.Sessions, db.Problems)
 
+	candidates := controllers.NewCandidateController(db.Users, db.Avalavility)
+
 	app := &App{
-		token:     pasetoToken,
-		routerApi: api,
-		config:    config,
-		db:        db,
-		ctx:       ctx,
-		promlems:  problems,
-		slots:     slots,
-		session:   session,
+		token:      pasetoToken,
+		routerApi:  api,
+		config:     config,
+		db:         db,
+		ctx:        ctx,
+		promlems:   problems,
+		slots:      slots,
+		session:    session,
+		candidates: candidates,
 	}
 	app.SetApi()
 	return app, nil
@@ -73,7 +77,7 @@ func NewApp(config configs.Config, api *fiber.App) (*App, error) {
 // @Accept       json
 // @Produce      json
 //
-// @Param        request  body  models.Credentials  true  "Sign in info"
+// @Param        request  body  models.LoginInfo  true  "Sign in info"
 //
 // @Success      200
 // @Failure      400
@@ -81,12 +85,12 @@ func NewApp(config configs.Config, api *fiber.App) (*App, error) {
 //
 // @Router      /login [post]
 func (a *App) Login(c fiber.Ctx) error {
-	creds := new(models.Credentials)
+	creds := new(models.LoginInfo)
 	if err := c.Bind().JSON(creds); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	hashPass, err := a.db.Interwiewers.GetPassHash(a.ctx, creds.Username)
+	hashPass, err := a.db.Users.GetPassHash(creds.Username)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
@@ -100,12 +104,17 @@ func (a *App) Login(c fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).JSON("Invalid password")
 	}
 
+	role, err := a.db.Users.GetRole(creds.Username)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
 	pasetoToken, err := a.token.NewTocken(models.TockenData{
 		Subject:  "for user",
 		Duration: a.config.TokenDuration,
 		AdditionalClaims: models.AdditionalClaims{
 			Name: creds.Username,
-			Role: creds.Username,
+			Role: role,
 		},
 		Footer: models.Footer{MetaData: "fotter for" + creds.Username},
 	})
@@ -142,11 +151,12 @@ func (a *App) Register(c fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
-	err = a.db.Interwiewers.Update(a.ctx, &entities.Interviewer{
+	err = a.db.Users.Update(a.ctx, &entities.User{
 		0,
 		creds.Username,
 		hash,
 		creds.Email,
+		creds.Role,
 	})
 
 	if err != nil {
@@ -175,15 +185,37 @@ func (a *App) CheckAuth() fiber.Handler {
 	}
 }
 
+func (a *App) CheckRole(allowedRoles ...string) fiber.Handler {
+	return func(c fiber.Ctx) error {
+
+		val := c.Locals("claims")
+
+		claims, ok := val.(*models.ServiceClaims)
+		if !ok {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
+		}
+
+		for _, role := range allowedRoles {
+			if claims.Role == role {
+				return c.Next()
+			}
+		}
+
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error": "forbidden",
+		})
+	}
+}
+
 func (a *App) SetApi() {
 	a.routerApi.Post("/login", a.Login)
 	a.routerApi.Post("/register", a.Register)
 
 	protectedApi := a.routerApi.Group("api", a.CheckAuth())
-	protectedApiSession := protectedApi.Group("session")
-	protectedApiCandidates := protectedApi.Group("candidates")
-	protectedApiProblmes := protectedApi.Group("problems")
-	protectedApiSlots := protectedApi.Group("slots")
+	protectedApiSession := protectedApi.Group("session", a.CheckRole("interviewer"))
+	protectedApiCandidates := protectedApi.Group("candidates", a.CheckRole("interviewer", "candidate"))
+	protectedApiProblmes := protectedApi.Group("problems", a.CheckRole("interviewer"))
+	protectedApiSlots := protectedApi.Group("slots", a.CheckRole("interviewer"))
 
 	//api is protected group
 	protectedApi.Get("/account", func(c fiber.Ctx) error {
@@ -214,8 +246,10 @@ func (a *App) SetApi() {
 	protectedApiSession.Post("/:id/start", a.StartSession)
 	protectedApiSession.Post("/:id/stop", a.StopSession)
 
-	protectedApiCandidates.Post("/add", a.AddCandidateHandler)
 	protectedApiCandidates.Delete("/:id", a.DeleteCandidateHandler)
+	protectedApiCandidates.Get("/candidates/:id/slots", a.GetAvalableSlotsHandler)
+	protectedApiCandidates.Post("/:candidateId/slots/:slotId/book", a.CandidateBookSlotHandler)
+	protectedApiCandidates.Delete("/:candidateId/slots/:slotId/unbook", a.CandidateUnbookSlotHandler)
 
 	protectedApiProblmes.Post("/add", a.AddProblemHandler)
 	protectedApiProblmes.Delete("/:id", a.DeleteProblemHandler)

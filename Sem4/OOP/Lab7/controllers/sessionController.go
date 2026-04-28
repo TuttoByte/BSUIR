@@ -9,11 +9,11 @@ import (
 )
 
 type SessionController struct {
-	session  *db.SessionDB
-	problems *db.ProblemsDB
+	session  db.SessionRepository
+	problems db.ProblemsRepository
 }
 
-func NewSessionController(sessinons *db.SessionDB, problems *db.ProblemsDB) *SessionController {
+func NewSessionController(sessinons db.SessionRepository, problems db.ProblemsRepository) *SessionController {
 	return &SessionController{
 		session:  sessinons,
 		problems: problems,
@@ -69,7 +69,7 @@ func (s *SessionController) GetAllSessions() ([]models.Session, error) {
 	return sessions, nil
 }
 
-func (s *SessionController) AddSession(candidate models.Candidate, interviwer models.Interviewer) error {
+func (s *SessionController) AddSession(candidate models.User, interviwer models.User) error {
 	ctx := context.Background()
 	session := models.NewSession(candidate, interviwer)
 	err := s.session.Update(ctx, session)

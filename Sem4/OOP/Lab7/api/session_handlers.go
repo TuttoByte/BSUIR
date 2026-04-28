@@ -30,11 +30,11 @@ func (a *App) CreateSession(c fiber.Ctx) error {
 		return c.Status(http.StatusBadRequest).JSON("invalid info")
 	}
 
-	candidate, err := a.db.Candidates.FindByID(ctx, regInfo.CandidateId)
+	candidate, err := a.db.Users.FindByID(ctx, regInfo.CandidateId)
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON("invalid candidate id")
 	}
-	interwiewer, err := a.db.Interwiewers.FindByID(ctx, regInfo.InterwiwerId)
+	interwiewer, err := a.db.Users.FindByID(ctx, regInfo.InterwiwerId)
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON("invalid interwiewer id")
 	}
