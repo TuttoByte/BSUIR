@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Interviewer struct {
 	ID       uint64 `gorm:"primaryKey"`
 	Name     string `json:"name"`
@@ -32,4 +34,17 @@ type SessionInfo struct {
 	Username          string
 	UserIdentificator string
 	Candidate         string
+}
+
+type AvailabilitySlot struct {
+	ID            uint64    `gorm:"primaryKey"`
+	InterviewerID uint64    `json:"interviewer_id"`
+	StartTime     time.Time `json:"start_time"`
+	EndTime       time.Time `json:"end_time"`
+	IsBooked      bool      `json:"is_booked"`
+}
+
+type AddProblemsInfo struct {
+	SessionId uint64   `json:"session_id"`
+	Problems  []uint64 `json:"problems"`
 }

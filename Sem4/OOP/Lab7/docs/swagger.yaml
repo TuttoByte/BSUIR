@@ -1,9 +1,31 @@
 definitions:
+  models.AddProblemsInfo:
+    properties:
+      problems:
+        items:
+          type: integer
+        type: array
+      session_id:
+        type: integer
+    type: object
   models.AnyUserInfo:
     properties:
       email:
         type: string
       username:
+        type: string
+    type: object
+  models.AvailabilitySlot:
+    properties:
+      end_time:
+        type: string
+      id:
+        type: integer
+      interviewer_id:
+        type: integer
+      is_booked:
+        type: boolean
+      start_time:
         type: string
     type: object
   models.Credentials:
@@ -241,7 +263,6 @@ paths:
       - problems
   /api/session/{id}:
     delete:
-      description: Удаляет сессию  по ID в защищённой зоне
       parameters:
       - description: Candidate ID
         in: path
@@ -253,25 +274,69 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "400":
           description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "500":
           description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
       security:
       - PASETOAuth: []
       summary: Удалить сессию (требует PASETO токен)
+      tags:
+      - session
+  /api/session/{id}/start:
+    post:
+      parameters:
+      - description: Session ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - PASETOAuth: []
+      summary: Начать сессию
+      tags:
+      - session
+  /api/session/{id}/stop:
+    post:
+      parameters:
+      - description: Session ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - PASETOAuth: []
+      summary: Остановить сессию
       tags:
       - session
   /api/session/all:
@@ -381,82 +446,132 @@ paths:
       summary: Получить сессию(требует PASETO токен)
       tags:
       - session
-  /api/session/start:
+  /api/session/problems:
     post:
-      consumes:
-      - application/json
-      description: Начать сессию в защищённой зоне
       parameters:
-      - description: Session id
+      - description: Session problems info
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/models.IdSetter'
+          $ref: '#/definitions/models.AddProblemsInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - PASETOAuth: []
+      summary: Добавить задачи в сессию
+      tags:
+      - session
+  /api/slots/{id}:
+    delete:
+      parameters:
+      - description: Slot ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - PASETOAuth: []
+      summary: Удалить бронь времени (требует PASETO токен)
+      tags:
+      - slot
+  /api/slots/{id}/book:
+    post:
+      parameters:
+      - description: Session ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - PASETOAuth: []
+      summary: Забронировать время
+      tags:
+      - slot
+  /api/slots/{id}/unbook:
+    post:
+      parameters:
+      - description: Session ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - PASETOAuth: []
+      summary: Освободить время
+      tags:
+      - slot
+  /api/slots/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Session info
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.AvailabilitySlot'
       produces:
       - application/json
       responses:
         "201":
           description: Created
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "400":
           description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "500":
           description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
       security:
       - PASETOAuth: []
-      summary: Начать сессию(требует PASETO токен)
+      summary: Создать времной слот (требует PASETO токен)
       tags:
-      - session
-  /api/session/stop:
-    post:
-      consumes:
-      - application/json
-      description: Остановить сессию в защищённой зоне
-      parameters:
-      - description: Session id
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/models.IdSetter'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      security:
-      - PASETOAuth: []
-      summary: Остановить сессию(требует PASETO токен)
-      tags:
-      - session
+      - slot
   /login:
     post:
       consumes:

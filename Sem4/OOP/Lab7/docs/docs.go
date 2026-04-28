@@ -383,7 +383,7 @@ const docTemplate = `{
                 "summary": "создать сессию (требует PASETO токен)",
                 "parameters": [
                     {
-                        "description": "Session info",
+                        "description": "session info",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -443,7 +443,7 @@ const docTemplate = `{
                 "summary": "Получить сессию(требует PASETO токен)",
                 "parameters": [
                     {
-                        "description": "Session id",
+                        "description": "session id",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -483,16 +483,12 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/session/start": {
+        "/api/session/problems": {
             "post": {
                 "security": [
                     {
                         "PASETOAuth": []
                     }
-                ],
-                "description": "Начать сессию в защищённой зоне",
-                "consumes": [
-                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -500,105 +496,27 @@ const docTemplate = `{
                 "tags": [
                     "session"
                 ],
-                "summary": "Начать сессию(требует PASETO токен)",
+                "summary": "Добавить задачи в сессию",
                 "parameters": [
                     {
-                        "description": "Session id",
+                        "description": "session problems info",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.IdSetter"
+                            "$ref": "#/definitions/models.AddProblemsInfo"
                         }
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
+                    "200": {
+                        "description": "OK"
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
+                        "description": "Bad Request"
                     },
                     "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/session/stop": {
-            "post": {
-                "security": [
-                    {
-                        "PASETOAuth": []
-                    }
-                ],
-                "description": "Остановить сессию в защищённой зоне",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "session"
-                ],
-                "summary": "Остановить сессию(требует PASETO токен)",
-                "parameters": [
-                    {
-                        "description": "Session id",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.IdSetter"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -610,7 +528,6 @@ const docTemplate = `{
                         "PASETOAuth": []
                     }
                 ],
-                "description": "Удаляет сессию  по ID в защищённой зоне",
                 "produces": [
                     "application/json"
                 ],
@@ -629,30 +546,269 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/session/{id}/start": {
+            "post": {
+                "security": [
+                    {
+                        "PASETOAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Начать сессию",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "session ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "type": "string"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "type": "string"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/session/{id}/stop": {
+            "post": {
+                "security": [
+                    {
+                        "PASETOAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "session"
+                ],
+                "summary": "Остановить сессию",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "session ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/slots/add": {
+            "post": {
+                "security": [
+                    {
+                        "PASETOAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "slot"
+                ],
+                "summary": "Создать времной слот (требует PASETO токен)",
+                "parameters": [
+                    {
+                        "description": "session info",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.AvailabilitySlot"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/slots/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "PASETOAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "slot"
+                ],
+                "summary": "Удалить бронь времени (требует PASETO токен)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Slot ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/slots/{id}/book": {
+            "post": {
+                "security": [
+                    {
+                        "PASETOAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "slot"
+                ],
+                "summary": "Забронировать время",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "session ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/slots/{id}/unbook": {
+            "post": {
+                "security": [
+                    {
+                        "PASETOAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "slot"
+                ],
+                "summary": "Освободить время",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "session ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -734,6 +890,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.AddProblemsInfo": {
+            "type": "object",
+            "properties": {
+                "problems": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "session_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.AnyUserInfo": {
             "type": "object",
             "properties": {
@@ -741,6 +911,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AvailabilitySlot": {
+            "type": "object",
+            "properties": {
+                "end_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "interviewer_id": {
+                    "type": "integer"
+                },
+                "is_booked": {
+                    "type": "boolean"
+                },
+                "start_time": {
                     "type": "string"
                 }
             }

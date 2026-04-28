@@ -13,9 +13,12 @@ type Session struct {
 	ID            uint64 `gorm:"primaryKey"`
 	CandidateId   uint64
 	InterviewerId uint64
-	Candidate     Candidate   `json:"candidate" gorm:"foreignKey:CandidateId"`
-	Interwiewer   Interviewer `json:"interwiewer" gorm:"foreignKey:InterviewerId"`
+	Candidate     Candidate `json:"candidate" gorm:"foreignKey:CandidateId"`
 
+	// Исправлено: Interwiewer -> Interviewer
+	Interviewer Interviewer `json:"interviewer" gorm:"foreignKey:InterviewerId"`
+
+	// Поле называется Problems, значит и прелоадить нужно "Problems"
 	Problems []InterwieweProblem `json:"problems" gorm:"many2many:session_problems"`
 
 	TimeInfo   TimeInfo `json:"time_info" gorm:"serializer:json"`
@@ -40,7 +43,7 @@ type Result struct {
 func NewSession(candidate Candidate, interwiewer Interviewer) *Session {
 	return &Session{
 		Candidate:   candidate,
-		Interwiewer: interwiewer,
+		Interviewer: interwiewer,
 		Problems:    make([]InterwieweProblem, 0),
 		IsStarted:   false,
 		isExtended:  false,

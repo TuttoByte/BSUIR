@@ -21,6 +21,8 @@ type App struct {
 
 	db       *controllers.Dbontroller
 	promlems *controllers.ProblemsController
+	slots    *controllers.AvalTimeController
+	session  *controllers.SessionController
 
 	ctx context.Context
 }
@@ -46,6 +48,10 @@ func NewApp(config configs.Config, api *fiber.App) (*App, error) {
 
 	problems := controllers.NewProblemsController(db.Problems)
 
+	slots := controllers.NewAvalTimeController(db.Avalavility)
+
+	session := controllers.NewSessionController(db.Sessions, db.Problems)
+
 	app := &App{
 		token:     pasetoToken,
 		routerApi: api,
@@ -53,6 +59,8 @@ func NewApp(config configs.Config, api *fiber.App) (*App, error) {
 		db:        db,
 		ctx:       ctx,
 		promlems:  problems,
+		slots:     slots,
+		session:   session,
 	}
 	app.SetApi()
 	return app, nil
@@ -175,6 +183,7 @@ func (a *App) SetApi() {
 	protectedApiSession := protectedApi.Group("session")
 	protectedApiCandidates := protectedApi.Group("candidates")
 	protectedApiProblmes := protectedApi.Group("problems")
+	protectedApiSlots := protectedApi.Group("slots")
 
 	//api is protected group
 	protectedApi.Get("/account", func(c fiber.Ctx) error {
@@ -199,6 +208,7 @@ func (a *App) SetApi() {
 	protectedApiSession.Get("/all", a.GetAllSessions)
 	protectedApiSession.Post("/get", a.GetSessionById)
 	protectedApiSession.Delete("/:id", a.DeleteSessionById)
+	protectedApiSession.Post("/problems", a.AddProblemsToSession)
 
 	protectedApiSession.Post("/:id/start", a.StartSession)
 	protectedApiSession.Post("/:id/stop", a.StopSession)
@@ -210,6 +220,11 @@ func (a *App) SetApi() {
 	protectedApiProblmes.Delete("/:id", a.DeleteProblemHandler)
 	protectedApiProblmes.Get("/all", a.GetAllProblems)
 	protectedApiProblmes.Get("/:id", a.GetProblemByIdHandler)
+
+	protectedApiSlots.Post("/book", a.BookSlotsHandler)
+	protectedApiSlots.Post("/unbook", a.UnookSlotsHandler)
+	protectedApiSlots.Delete("/:id", a.DeleteSlotsByIdHandler)
+	protectedApiSlots.Post("/add", a.AddSlotHandler)
 
 }
 

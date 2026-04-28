@@ -10,6 +10,7 @@ type Dbontroller struct {
 	Interwiewers *db.InterwiewerDB
 	Problems     *db.ProblemsDB
 	Sessions     *db.SessionDB
+	Avalavility  *db.AvalabilytyDB
 }
 
 func NewDbontroller(ctx context.Context) (*Dbontroller, error) {
@@ -33,6 +34,11 @@ func NewDbontroller(ctx context.Context) (*Dbontroller, error) {
 		return nil, err
 	}
 
+	aval, err := db.NewAvalabilytyDB()
+	if err != nil {
+		return nil, err
+	}
+
 	err = candidate.Create(ctx)
 	if err != nil {
 		return nil, err
@@ -49,12 +55,17 @@ func NewDbontroller(ctx context.Context) (*Dbontroller, error) {
 	if err != nil {
 		return nil, err
 	}
+	err = aval.Create(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	return &Dbontroller{
 		Candidates:   candidate,
 		Interwiewers: interwiewer,
 		Problems:     problems,
 		Sessions:     sessions,
+		Avalavility:  aval,
 	}, nil
 
 }

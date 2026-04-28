@@ -31,6 +31,9 @@ func (s *SessionDB) GetAllActiveSessions(ctx context.Context) ([]models.Session,
 
 func (s *SessionDB) GetAll() ([]models.Session, error) {
 	var sessions []models.Session
-	s.db.Preload("Candidate").Preload("Interviewer").Find(&sessions)
+	s.db.Preload("Candidate").
+		Preload("Interviewer").
+		Preload("Problems").
+		Find(&sessions)
 	return sessions, nil
 }

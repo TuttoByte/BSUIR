@@ -4,7 +4,6 @@ import (
 	models2 "Lab7/models"
 	"Lab7/shared/tockens/models"
 	"context"
-	"fmt"
 	"github.com/gofiber/fiber/v3"
 	"net/http"
 	"strconv"
@@ -17,7 +16,7 @@ import (
 // @Tags session
 // @Accept json
 // @Produce json
-// @Param body body models.SessionRegisterInfo true "Session info"
+// @Param body body models.SessionRegisterInfo true "session info"
 // @Success 201 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
@@ -39,13 +38,12 @@ func (a *App) CreateSession(c fiber.Ctx) error {
 		return c.Status(http.StatusBadRequest).JSON("invalid interwiewer id")
 	}
 
-	newSession := models2.NewSession(candidate, interwiewer)
-	err = a.db.Sessions.Update(ctx, newSession)
+	err = a.session.AddSession(candidate, interwiewer)
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(err)
+		return c.Status(http.StatusInternalServerError).JSON("invalid session id")
 	}
 
-	return c.Status(http.StatusCreated).JSON(fmt.Sprintf("New session id = %d", newSession.ID))
+	return c.Status(http.StatusCreated).JSON("session created")
 }
 
 // GetAllSessions (в защищённой группе /api/session)
@@ -60,9 +58,9 @@ func (a *App) CreateSession(c fiber.Ctx) error {
 // @Failure 500 {object} map[string]string
 // @Router /api/session/all [get]
 func (a *App) GetAllSessions(c fiber.Ctx) error {
-	sessions, err := a.db.Sessions.GetAll()
+	sessions, err := a.session.GetAllSessions()
 	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(err)
+		return c.Status(fiber.StatusInternalServerError).JSON(err)
 	}
 	return c.JSON(sessions)
 }
@@ -74,19 +72,18 @@ func (a *App) GetAllSessions(c fiber.Ctx) error {
 // @Tags session
 // @Accept json
 // @Produce json
-// @Param body body models.IdSetter true "Session id"
+// @Param body body models.IdSetter true "session id"
 // @Success 201 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/session/get [post]
 func (a *App) GetSessionById(c fiber.Ctx) error {
-	ctx := context.Background()
 	idSetter := new(models.IdSetter)
 	if err := c.Bind().JSON(idSetter); err != nil {
 		return c.Status(http.StatusBadRequest).JSON("invalid id type")
 	}
 
-	session, err := a.db.Sessions.FindByID(ctx, idSetter.Id)
+	session, err := a.session.GetSessionById(idSetter.Id)
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON("invalid session id")
 	}
@@ -96,22 +93,20 @@ func (a *App) GetSessionById(c fiber.Ctx) error {
 // DeleteSessionById (в защищённой группе /api/candidates/:id)
 // @Summary Удалить сессию (требует PASETO токен)
 // @Security PASETOAuth
-// @Description Удаляет сессию  по ID в защищённой зоне
 // @Tags session
 // @Produce json
 // @Param id path int true "Candidate ID"
-// @Success 200 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Failure 500 {object} map[string]string
+// @Success 200
+// @Failure 400
+// @Failure 500
 // @Router /api/session/{id} [delete]
 func (a *App) DeleteSessionById(c fiber.Ctx) error {
-	ctx := context.Background()
-	idSetter := new(models.IdSetter)
-	if err := c.Bind().JSON(idSetter); err != nil {
-		return c.Status(http.StatusBadRequest).JSON("invalid id type")
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{})
 	}
 
-	err := a.db.Sessions.Delete(ctx, idSetter.Id)
+	err = a.session.DeleteSession(uint64(id))
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(err)
 	}
@@ -123,28 +118,22 @@ func (a *App) DeleteSessionById(c fiber.Ctx) error {
 // @Security PASETOAuth
 // @Tags session
 // @Produce json
-// @Param id path int true "Session ID"
+// @Param id path int true "session ID"
 // @Success 200 {string} string
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /api/session/{id}/start [post]
 func (a *App) StartSession(c fiber.Ctx) error {
-	ctx := context.Background()
-
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON("invalid id")
 	}
 
-	session, err := a.db.Sessions.FindByID(ctx, uint64(id))
+	err = a.session.StartSession(uint64(id))
 	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON("invalid session id type")
+		return c.Status(http.StatusInternalServerError).JSON(err)
 	}
-	if session.IsActive() {
-		return c.Status(http.StatusInternalServerError).JSON("session is already started")
-	}
-	session.Start()
-	return c.Status(http.StatusOK).JSON(fmt.Sprintf("Session is startes id = %d", session.ID))
+	return c.Status(http.StatusOK).JSON("session started")
 }
 
 // StopSession (в защищённой группе /api/session)
@@ -152,27 +141,44 @@ func (a *App) StartSession(c fiber.Ctx) error {
 // @Security PASETOAuth
 // @Tags session
 // @Produce json
-// @Param id path int true "Session ID"
+// @Param id path int true "session ID"
 // @Success 200 {string} string
 // @Failure 400 {string} string
 // @Failure 500 {string} string
 // @Router /api/session/{id}/stop [post]
 func (a *App) StopSession(c fiber.Ctx) error {
-	ctx := context.Background()
-
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON("invalid id")
 	}
 
-	session, err := a.db.Sessions.FindByID(ctx, uint64(id))
-
+	err = a.session.EndSession(uint64(id))
 	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON("invalid session id type")
+		return c.Status(http.StatusInternalServerError).JSON(err)
 	}
-	if !session.IsActive() {
-		return c.Status(http.StatusInternalServerError).JSON("session is already stopped")
+	return c.Status(http.StatusOK).JSON("session ended")
+}
+
+// AddProblemsToSession (в защищённой группе /api/session)
+// @Summary Добавить задачи в сессию
+// @Security PASETOAuth
+// @Tags session
+// @Produce json
+// @Param body body models.AddProblemsInfo true "session problems info"
+// @Success 200
+// @Failure 400
+// @Failure 500
+// @Router /api/session/problems [post]
+func (a *App) AddProblemsToSession(c fiber.Ctx) error {
+	info := new(models2.AddProblemsInfo)
+	if err := c.Bind().JSON(info); err != nil {
+		return c.Status(http.StatusBadRequest).JSON("invalid info")
 	}
-	session.End()
-	return c.Status(http.StatusOK).JSON(fmt.Sprintf("Session is ended id = %d", session.ID))
+
+	err := a.session.AddProblems(info.Problems, info.SessionId)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(err)
+	}
+
+	return c.Status(http.StatusOK).JSON("session problems added")
 }
